@@ -1,0 +1,8 @@
+name: AuroraMC-Duels
+main: net.auroramc.duels.AuroraMCDuels
+version: 1.0-SNAPSHOT
+author: "The AuroraMC Development Team"
+website: auroramc.net
+load: STARTUP
+depend:
+  - AuroraMC-Core
