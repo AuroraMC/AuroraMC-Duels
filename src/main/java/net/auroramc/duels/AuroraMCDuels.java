@@ -5,6 +5,7 @@ import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.DuelsMap;
 import net.auroramc.duels.api.backend.DuelsDatabaseManager;
 import net.auroramc.duels.api.game.MapRegistry;
+import net.auroramc.duels.listeners.LobbyListener;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -101,6 +102,7 @@ public class AuroraMCDuels extends JavaPlugin {
         }
 
         getLogger().info("Waiting lobby copied. Registering listeners and commands...");
+        Bukkit.getPluginManager().registerEvents(new LobbyListener(), this);
     }
 
     @Override
