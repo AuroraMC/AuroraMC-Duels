@@ -12,7 +12,9 @@ import net.auroramc.duels.commands.CommandUndisguiseOverride;
 import net.auroramc.duels.commands.duel.CommandDuel;
 import net.auroramc.duels.kits.Archer;
 import net.auroramc.duels.kits.Gapple;
+import net.auroramc.duels.kits.Sumo;
 import net.auroramc.duels.listeners.*;
+import net.auroramc.duels.utils.damage.NoDamageListener;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
 import net.auroramc.duels.utils.settings.*;
 import org.apache.commons.io.FileUtils;
@@ -116,6 +118,7 @@ public class AuroraMCDuels extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableMoveListener(), this);
         Bukkit.getPluginManager().registerEvents(new StandardDeathListener(), this);
+        Bukkit.getPluginManager().registerEvents(new NoDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableBreakListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisablePlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableHungerListener(), this);
@@ -131,6 +134,7 @@ public class AuroraMCDuels extends JavaPlugin {
 
 
         DuelsAPI.registerKit(new Gapple());
+        DuelsAPI.registerKit(new Sumo());
         DuelsAPI.registerKit(new Archer());
 
         new BukkitRunnable(){
