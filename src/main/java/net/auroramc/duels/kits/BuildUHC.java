@@ -80,7 +80,7 @@ public class BuildUHC extends Kit {
         player.getPlayer().getInventory().setItem(2, bow);
         player.getPlayer().getInventory().setItem(3, new GUIItem(Material.LAVA_BUCKET, null, 1, null, (short)0).getItem());
         player.getPlayer().getInventory().setItem(4, new GUIItem(Material.WATER_BUCKET, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(5, new GUIItem(Material.GOLDEN_APPLE, null, 1, null, (short)0).getItem());
+        player.getPlayer().getInventory().setItem(5, new GUIItem(Material.GOLDEN_APPLE, null, 6, null, (short)0).getItem());
         player.getPlayer().getInventory().setItem(6, new GUIItem(Material.SKULL_ITEM, "&3&lGolden Head", 3, null, (short)3, false, "PhantomTupac").getItem());
         player.getPlayer().getInventory().setItem(7, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItem());
         player.getPlayer().getInventory().setItem(8, new GUIItem(Material.COBBLESTONE, null, 64, null, (short)0).getItem());
@@ -89,7 +89,6 @@ public class BuildUHC extends Kit {
         player.getPlayer().getInventory().setItem(11, new GUIItem(Material.DIAMOND_PICKAXE, null, 1, null, (short)0).getItem());
         player.getPlayer().getInventory().setItem(30, new GUIItem(Material.LAVA_BUCKET, null, 1, null, (short)0).getItem());
         player.getPlayer().getInventory().setItem(31, new GUIItem(Material.WATER_BUCKET, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(32, new GUIItem(Material.GOLDEN_APPLE, null, 1, null, (short)0).getItem());
         player.getPlayer().getInventory().setItem(35, new GUIItem(Material.WOOD, null, 64, null, (short)0).getItem());
 
     }
