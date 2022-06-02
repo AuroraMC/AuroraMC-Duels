@@ -11,10 +11,12 @@ public class DisableMoveListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        AuroraMCDuelsPlayer duelsPlayer = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
-        if (duelsPlayer.isInGame() && duelsPlayer.getGame().getGameState() == Game.GameState.STARTING) {
-            if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-                e.setTo(e.getFrom());
+        if (AuroraMCAPI.getPlayer(e.getPlayer()) instanceof AuroraMCDuelsPlayer) {
+            AuroraMCDuelsPlayer duelsPlayer = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+            if (duelsPlayer.isInGame() && duelsPlayer.getGame().getGameState() == Game.GameState.STARTING) {
+                if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
+                    e.setTo(e.getFrom());
+                }
             }
         }
     }

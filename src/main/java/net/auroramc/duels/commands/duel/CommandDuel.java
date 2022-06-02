@@ -21,8 +21,8 @@ public class CommandDuel extends Command {
     public CommandDuel() {
         super("duel", Arrays.asList("duelplayer", "duelrequest"), Collections.singletonList(Permission.PLAYER), false, null);
         this.registerSubcommand("accept", Collections.emptyList(), new CommandDuelAccept());
-        this.registerSubcommand("deny", Collections.emptyList(), new CommandDuelAccept());
-        this.registerSubcommand("cancel", Collections.emptyList(), new CommandDuelAccept());
+        this.registerSubcommand("deny", Collections.emptyList(), new CommandDuelDeny());
+        this.registerSubcommand("cancel", Collections.emptyList(), new CommandDuelCancel());
     }
 
     @Override
