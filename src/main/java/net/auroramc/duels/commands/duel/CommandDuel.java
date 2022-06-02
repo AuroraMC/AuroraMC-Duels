@@ -5,6 +5,7 @@ import net.auroramc.core.api.command.Command;
 import net.auroramc.core.api.permissions.Permission;
 import net.auroramc.core.api.players.AuroraMCPlayer;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
+import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.game.DuelInvite;
 import net.auroramc.duels.gui.KitSelection;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,10 @@ public class CommandDuel extends Command {
 
     @Override
     public void execute(AuroraMCPlayer player, String aliasUsed, List<String> args) {
+        if (DuelsAPI.isAwaitingRestart()) {
+            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels","Due to a pending update, Duels is currently unavailable in this server. Please try a different Duels server."));
+            return;
+        }
         if (args.size() >= 1) {
             switch (args.get(0).toLowerCase()) {
                 case "accept":

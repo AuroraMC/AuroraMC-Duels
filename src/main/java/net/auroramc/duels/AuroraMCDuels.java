@@ -9,8 +9,16 @@ import net.auroramc.duels.api.game.MapRegistry;
 import net.auroramc.duels.commands.CommandDisguiseOverride;
 import net.auroramc.duels.commands.CommandHub;
 import net.auroramc.duels.commands.CommandUndisguiseOverride;
+import net.auroramc.duels.commands.duel.CommandDuel;
 import net.auroramc.duels.kits.OP;
+import net.auroramc.duels.listeners.DisableMoveListener;
+import net.auroramc.duels.listeners.JoinListener;
 import net.auroramc.duels.listeners.LobbyListener;
+import net.auroramc.duels.listeners.ShutdownRequestListener;
+import net.auroramc.duels.utils.damage.StandardDeathListener;
+import net.auroramc.duels.utils.settings.DisableBreakListener;
+import net.auroramc.duels.utils.settings.DisableHungerListener;
+import net.auroramc.duels.utils.settings.DisablePlaceListener;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -108,8 +116,16 @@ public class AuroraMCDuels extends JavaPlugin {
 
         getLogger().info("Waiting lobby copied. Registering listeners and commands...");
         Bukkit.getPluginManager().registerEvents(new LobbyListener(), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableMoveListener(), this);
+        Bukkit.getPluginManager().registerEvents(new StandardDeathListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableBreakListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisablePlaceListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableHungerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ShutdownRequestListener(), this);
 
         AuroraMCAPI.registerCommand(new CommandHub());
+        AuroraMCAPI.registerCommand(new CommandDuel());
         AuroraMCAPI.registerCommand(new CommandDisguiseOverride());
         AuroraMCAPI.registerCommand(new CommandUndisguiseOverride());
 

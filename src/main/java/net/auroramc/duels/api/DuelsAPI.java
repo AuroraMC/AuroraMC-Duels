@@ -28,6 +28,9 @@ public class DuelsAPI {
     private final static GUIItem prefsItem;
     private final static GUIItem cosmeticsItem;
 
+    private static boolean awaitingRestart;
+    private static String restartType;
+
     static {
         maps = new HashMap<>();
         registeredKits = new ArrayList<>();
@@ -102,4 +105,22 @@ public class DuelsAPI {
     public static List<Game> getGames() {
         return games;
     }
+
+    public static boolean isAwaitingRestart() {
+        return awaitingRestart;
+    }
+
+    public static void setAwaitingRestart(boolean awaitingRestart) {
+        DuelsAPI.awaitingRestart = awaitingRestart;
+    }
+
+    public static void setRestartType(String restartType) {
+        DuelsAPI.restartType = restartType;
+    }
+
+    public static String getRestartType() {
+        return restartType;
+    }
+
+
 }
