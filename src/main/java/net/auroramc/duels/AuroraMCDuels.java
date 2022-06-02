@@ -10,7 +10,7 @@ import net.auroramc.duels.commands.CommandDisguiseOverride;
 import net.auroramc.duels.commands.CommandHub;
 import net.auroramc.duels.commands.CommandUndisguiseOverride;
 import net.auroramc.duels.commands.duel.CommandDuel;
-import net.auroramc.duels.kits.OP;
+import net.auroramc.duels.kits.Gapple;
 import net.auroramc.duels.listeners.*;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
 import net.auroramc.duels.utils.settings.DisableBreakListener;
@@ -129,7 +129,7 @@ public class AuroraMCDuels extends JavaPlugin {
         AuroraMCAPI.registerCommand(new CommandUndisguiseOverride());
 
 
-        DuelsAPI.registerKit(new OP());
+        DuelsAPI.registerKit(new Gapple());
 
         new BukkitRunnable(){
             @Override
