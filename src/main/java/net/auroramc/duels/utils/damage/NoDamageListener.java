@@ -32,7 +32,7 @@ public class NoDamageListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getPlayer());
-        if (player.isInGame() && games.contains(player.getGame())) {
+        if (player.isInGame() && games.contains(player.getGame()) && player.getGame().getGameState() == Game.GameState.IN_PROGRESS) {
 
 
             if (e.getFrom().getBlock().getType().equals(e.getTo().getBlock().getType())) {
