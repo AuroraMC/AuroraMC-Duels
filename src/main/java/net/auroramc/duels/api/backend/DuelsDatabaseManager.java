@@ -1,6 +1,7 @@
 package net.auroramc.duels.api.backend;
 
 import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
 import org.apache.commons.io.FileUtils;
 import redis.clients.jedis.Jedis;
@@ -55,6 +56,13 @@ public class DuelsDatabaseManager {
     public static String getXpMessage() {
         try (Jedis connection = AuroraMCAPI.getDbManager().getRedisConnection()) {
             return connection.hget("xpboost", "message");
+        }
+    }
+
+    public static void updateServerData() {
+        try (Jedis connection = AuroraMCAPI.getDbManager().getRedisConnection()) {
+            connection.set("serverdata." + AuroraMCAPI.getServerInfo().getNetwork().name() + "." + AuroraMCAPI.getServerInfo().getName(), ((DuelsAPI.isAwaitingRestart())?"INACTIVE":"ACTIVE") + ";" + AuroraMCAPI.getPlayers().stream().filter(player -> !player.isVanished() && (player instanceof AuroraMCDuelsPlayer && !player.isVanished())).count() + "/" + AuroraMCAPI.getServerInfo().getServerType().getInt("max_players") + ";Duels;N/A");
+            connection.expire("serverdata." + AuroraMCAPI.getServerInfo().getNetwork().name() + "." + AuroraMCAPI.getServerInfo().getName(), 15);
         }
     }
 

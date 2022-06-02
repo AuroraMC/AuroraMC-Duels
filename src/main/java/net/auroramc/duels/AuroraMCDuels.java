@@ -19,6 +19,7 @@ import net.auroramc.duels.utils.settings.DisablePlaceListener;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -129,6 +130,13 @@ public class AuroraMCDuels extends JavaPlugin {
 
 
         DuelsAPI.registerKit(new OP());
+
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                DuelsDatabaseManager.updateServerData();
+            }
+        }.runTaskTimerAsynchronously(this, 0, 20);
     }
 
     @Override
