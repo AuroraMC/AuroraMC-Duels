@@ -10,11 +10,7 @@ import net.auroramc.duels.commands.CommandDisguiseOverride;
 import net.auroramc.duels.commands.CommandHub;
 import net.auroramc.duels.commands.CommandUndisguiseOverride;
 import net.auroramc.duels.commands.duel.CommandDuel;
-import net.auroramc.duels.kits.Archer;
-import net.auroramc.duels.kits.Gapple;
-import net.auroramc.duels.kits.NoDebuff;
-import net.auroramc.duels.kits.Sumo;
-import net.auroramc.duels.kits.Vanilla;
+import net.auroramc.duels.kits.*;
 import net.auroramc.duels.listeners.*;
 import net.auroramc.duels.utils.damage.NoDamageListener;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
@@ -120,6 +116,7 @@ public class AuroraMCDuels extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableMoveListener(), this);
         Bukkit.getPluginManager().registerEvents(new StandardDeathListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BuildUHCListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableBreakListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisablePlaceListener(), this);
@@ -140,6 +137,7 @@ public class AuroraMCDuels extends JavaPlugin {
         DuelsAPI.registerKit(new Vanilla());
         DuelsAPI.registerKit(new Archer());
         DuelsAPI.registerKit(new NoDebuff());
+        DuelsAPI.registerKit(new BuildUHC());
 
         new BukkitRunnable(){
             @Override

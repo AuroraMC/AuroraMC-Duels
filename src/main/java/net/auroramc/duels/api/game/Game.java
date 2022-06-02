@@ -453,4 +453,8 @@ public class Game {
     public AuroraMCDuelsPlayer getPlayer2() {
         return player2;
     }
+
+    public World getWorld() {
+        return world;
+    }
 }
