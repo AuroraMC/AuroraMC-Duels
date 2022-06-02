@@ -208,7 +208,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onVanish(VanishEvent e) {
-        if (e.isVanish() || ((AuroraMCDuelsPlayer)e.getPlayer()).isInGame()) {
+        if (e.isVanish() || ((AuroraMCDuelsPlayer)e.getPlayer()).isInGame() || ((AuroraMCDuelsPlayer) e.getPlayer()).getPendingOutgoingInvite() != null) {
             e.setCancelled(true);
         }
     }
@@ -228,6 +228,5 @@ public class LobbyListener implements Listener {
         }
     }
 
-    
 
 }

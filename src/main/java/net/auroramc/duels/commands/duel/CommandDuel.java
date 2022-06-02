@@ -31,6 +31,9 @@ public class CommandDuel extends Command {
             player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels","Due to a pending update, Duels is currently unavailable in this server. Please try a different Duels server."));
             return;
         }
+        if (player.isVanished()) {
+            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "You cannot duel someone while vanished."));
+        }
         if (args.size() >= 1) {
             switch (args.get(0).toLowerCase()) {
                 case "accept":

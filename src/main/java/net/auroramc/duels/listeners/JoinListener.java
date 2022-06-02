@@ -3,18 +3,21 @@ package net.auroramc.duels.listeners;
 import net.auroramc.core.api.AuroraMCAPI;
 import net.auroramc.core.api.cosmetics.Cosmetic;
 import net.auroramc.core.api.cosmetics.ServerMessage;
+import net.auroramc.core.api.events.player.PlayerLeaveEvent;
 import net.auroramc.core.api.events.player.PlayerObjectCreationEvent;
 import net.auroramc.core.api.permissions.Rank;
 import net.auroramc.core.api.players.AuroraMCPlayer;
 import net.auroramc.core.api.players.scoreboard.PlayerScoreboard;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
+import net.auroramc.duels.api.game.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -100,6 +103,28 @@ public class JoinListener implements Listener {
         player.getPlayer().getInventory().setItem(7, DuelsAPI.getPrefsItem().getItem());
         player.getPlayer().getInventory().setItem(4, DuelsAPI.getCosmeticsItem().getItem());
 
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLeave(PlayerLeaveEvent e) {
+        if (!e.getPlayer().isVanished()) {
+            ServerMessage message = ((ServerMessage)e.getPlayer().getActiveCosmetics().getOrDefault(Cosmetic.CosmeticType.SERVER_MESSAGE, AuroraMCAPI.getCosmetics().get(400)));
+            for (AuroraMCPlayer player1 : AuroraMCAPI.getPlayers()) {
+                player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Leave", message.onLeave(player1, e.getPlayer())));
+            }
+        }
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
+        if (player.isInGame() && player.getGame().getGameState() != Game.GameState.ENDING) {
+            player.getGame().onLeave(player);
+            if (!player.isVanished()) {
+                if (player.getRewards() != null) {
+                    player.getRewards().stop();
+                    player.getRewards().apply(false);
+                    player.getStats().incrementStatistic(4, "gamesPlayed", 1, true);
+                }
+            }
+        }
     }
 
 }
