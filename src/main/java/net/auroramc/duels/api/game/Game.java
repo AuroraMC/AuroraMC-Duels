@@ -237,6 +237,7 @@ public class Game {
     }
 
     private void end(AuroraMCDuelsPlayer winner) {
+        gameState = GameState.ENDING;
         endTimestamp = System.currentTimeMillis();
         StringBuilder winnerString = new StringBuilder();
         winnerString.append("§3§l▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆\n");
