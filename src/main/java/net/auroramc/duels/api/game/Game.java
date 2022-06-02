@@ -367,6 +367,7 @@ public class Game {
         z = spawnLocations.getJSONObject(0).getInt("z");
         float yaw = spawnLocations.getJSONObject(0).getFloat("yaw");
         pl.getPlayer().teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, 0));
+        pl.getPlayer().spigot().setCollidesWithEntities(true);
         pl.getPlayer().setFallDistance(0);
         pl.getPlayer().setVelocity(new Vector());
         pl.getPlayer().setFlying(false);
