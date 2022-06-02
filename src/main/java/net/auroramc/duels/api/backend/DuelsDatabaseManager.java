@@ -20,7 +20,7 @@ public class DuelsDatabaseManager {
         try (Connection connection = AuroraMCAPI.getDbManager().getMySQLConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM maps WHERE parse_version = 'LIVE'");
             ResultSet set = statement.executeQuery();
-            File file = new File(DuelsAPI.getDuels().getDataFolder(), "zip");
+            File file = new File(DuelsAPI.getDuels().getDataFolder(), "zips");
             if (file.exists()) {
                 FileUtils.deleteDirectory(file);
             }
