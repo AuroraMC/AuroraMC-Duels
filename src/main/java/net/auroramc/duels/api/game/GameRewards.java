@@ -118,7 +118,7 @@ public class GameRewards {
             lines.setColor(ChatColor.DARK_AQUA);
             textComponent.addExtra(lines);
 
-            TextComponent rewardsBreakdown = new TextComponent("\nGame Rewards");
+            TextComponent rewardsBreakdown = new TextComponent("\nDuel Rewards");
             rewardsBreakdown.setBold(true);
             rewardsBreakdown.setColor(ChatColor.AQUA);
             textComponent.addExtra(rewardsBreakdown);
