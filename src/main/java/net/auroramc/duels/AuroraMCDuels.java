@@ -11,10 +11,7 @@ import net.auroramc.duels.commands.CommandHub;
 import net.auroramc.duels.commands.CommandUndisguiseOverride;
 import net.auroramc.duels.commands.duel.CommandDuel;
 import net.auroramc.duels.kits.OP;
-import net.auroramc.duels.listeners.DisableMoveListener;
-import net.auroramc.duels.listeners.JoinListener;
-import net.auroramc.duels.listeners.LobbyListener;
-import net.auroramc.duels.listeners.ShutdownRequestListener;
+import net.auroramc.duels.listeners.*;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
 import net.auroramc.duels.utils.settings.DisableBreakListener;
 import net.auroramc.duels.utils.settings.DisableHungerListener;
@@ -123,6 +120,7 @@ public class AuroraMCDuels extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisablePlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableHungerListener(), this);
         Bukkit.getPluginManager().registerEvents(new ShutdownRequestListener(), this);
+        Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 
         AuroraMCAPI.registerCommand(new CommandHub());
         AuroraMCAPI.registerCommand(new CommandDuel());
