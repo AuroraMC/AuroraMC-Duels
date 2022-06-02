@@ -7,9 +7,12 @@ import net.auroramc.duels.api.game.Kit;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
 import net.auroramc.duels.utils.settings.DisableBreakListener;
 import net.auroramc.duels.utils.settings.DisablePlaceListener;
+import net.minecraft.server.v1_8_R3.ItemMapEmpty;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Gapple extends Kit {
 
@@ -34,6 +37,10 @@ public class Gapple extends Kit {
         boots.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         sword = new ItemStack(Material.DIAMOND_SWORD);
         sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
+        ItemMeta meta = sword.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        sword.setItemMeta(meta);
     }
 
     public Gapple() {
