@@ -6,7 +6,6 @@ import net.auroramc.duels.api.game.Game;
 import net.auroramc.duels.api.game.Kit;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
 import net.auroramc.duels.utils.settings.DisableBreakListener;
-import net.auroramc.duels.utils.settings.DisableHungerListener;
 import net.auroramc.duels.utils.settings.DisablePlaceListener;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -19,7 +18,6 @@ public class OP extends Kit {
     private static final ItemStack leggings;
     private static final ItemStack boots;
     private static final ItemStack sword;
-    private static final ItemStack bow;
 
     static {
         helmet = new ItemStack(Material.DIAMOND_HELMET);
@@ -32,13 +30,10 @@ public class OP extends Kit {
         boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
         sword = new ItemStack(Material.DIAMOND_SWORD);
         sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-        bow = new ItemStack(Material.BOW);
-        bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 5);
-        bow.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
     }
 
     public OP() {
-        super(0, "Overpowered", "Overpowered", Material.GOLDEN_APPLE, (short)1, "ALL");
+        super(0, "Gapple", "Gapple", Material.GOLDEN_APPLE, (short)1, "ALL");
     }
 
     @Override
@@ -46,7 +41,6 @@ public class OP extends Kit {
         StandardDeathListener.register(game);
         DisableBreakListener.register(game);
         DisablePlaceListener.register(game);
-        DisableHungerListener.register(game);
     }
 
     @Override
@@ -54,7 +48,6 @@ public class OP extends Kit {
         StandardDeathListener.deregister(game);
         DisableBreakListener.deregister(game);
         DisablePlaceListener.deregister(game);
-        DisableHungerListener.deregister(game);
     }
 
     @Override
@@ -64,9 +57,7 @@ public class OP extends Kit {
         player.getPlayer().getInventory().setLeggings(leggings);
         player.getPlayer().getInventory().setBoots(boots);
         player.getPlayer().getInventory().setItem(0, sword);
-        player.getPlayer().getInventory().setItem(1, new GUIItem(Material.FISHING_ROD).getItem());
-        player.getPlayer().getInventory().setItem(2, bow);
-        player.getPlayer().getInventory().setItem(3, new GUIItem(Material.GOLDEN_APPLE, null, 1, null, (short)1).getItem());
-        player.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW, 1));
+        player.getPlayer().getInventory().setItem(1, new GUIItem(Material.GOLDEN_APPLE, null, 64, null, (short)1).getItem());
+        player.getPlayer().getInventory().setItem(2, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItem());
     }
 }
