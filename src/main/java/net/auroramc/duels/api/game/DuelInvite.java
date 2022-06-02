@@ -99,18 +99,19 @@ public class DuelInvite {
     private void expire() {
         if (invited.getPlayer() != null) {
             if (invited.getPlayer().isOnline()) {
-                invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** expired.", invited.getPlayer().getName())));
+                invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** expired.", inviter.getPlayer().getName())));
             }
             invited.removeIncoming(this);
         }
         inviter.removeOutgoing();
+        inviter.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite to **%s** expired.", invited.getPlayer().getName())));
     }
 
     public void accept() {
         invited.removeIncoming(this);
         inviter.removeOutgoing();
 
-        List<DuelsMap> maps = DuelsAPI.getMaps().get("DUELS").getMaps().stream().filter(duelsMap -> duelsMap.getMapData().getString("DUEL").equalsIgnoreCase(kit.getMapType())).collect(Collectors.toList());
+        List<DuelsMap> maps = DuelsAPI.getMaps().get("DUELS").getMaps().stream().filter(duelsMap -> duelsMap.getMapData().getString("duel").equalsIgnoreCase(kit.getMapType())).collect(Collectors.toList());
         DuelsMap map = maps.get(new Random().nextInt(maps.size()));
 
         Game game = new Game(invited, inviter, map, kit);
