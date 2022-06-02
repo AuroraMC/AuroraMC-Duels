@@ -57,7 +57,8 @@ public class Game {
         this.kit = kit;
         startTimestamp = -1;
         endTimestamp = -1;
-        kit.onGameCreate(this);
+
+        Game game = this;
 
 
         try {
@@ -82,6 +83,8 @@ public class Game {
                 if (map.getMapData().has("time")) {
                     world.setTime(map.getMapData().getInt("time"));
                 }
+
+                kit.onGameCreate(game);
 
                 JSONArray spawns = map.getMapData().getJSONObject("spawn").getJSONArray("PLAYERS");
                 JSONObject spawn = spawns.getJSONObject(0);
