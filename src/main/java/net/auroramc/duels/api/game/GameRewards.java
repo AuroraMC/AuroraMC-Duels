@@ -137,10 +137,6 @@ public class GameRewards {
 
             textComponent.addExtra(xp);
 
-            xp = new TextComponent("+" + ((totalXP + timeXp)*4) + " Kit XP\n");
-            xp.setColor(ChatColor.DARK_GREEN);
-            textComponent.addExtra(xp);
-
             TextComponent crowns = new TextComponent("+" + (this.crowns + timeXp) + " Crowns\n");
             crowns.setColor(ChatColor.GOLD);
             textComponent.addExtra(crowns);
