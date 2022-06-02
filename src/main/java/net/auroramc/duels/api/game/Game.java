@@ -243,7 +243,7 @@ public class Game {
         winnerString.append(" \n \n");
         winnerString.append("§b§l");
         winnerString.append((winner == null) ? "Nobody" : winner.getPlayer().getName());
-        winnerString.append(" won the game!");
+        winnerString.append(" won the duel!");
         winnerString.append("\n \n \n");
         winnerString.append("§b§lMap: §r");
         winnerString.append(map.getName());

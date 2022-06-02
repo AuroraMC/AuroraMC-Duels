@@ -13,9 +13,7 @@ import net.auroramc.duels.commands.duel.CommandDuel;
 import net.auroramc.duels.kits.Gapple;
 import net.auroramc.duels.listeners.*;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
-import net.auroramc.duels.utils.settings.DisableBreakListener;
-import net.auroramc.duels.utils.settings.DisableHungerListener;
-import net.auroramc.duels.utils.settings.DisablePlaceListener;
+import net.auroramc.duels.utils.settings.*;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -120,6 +118,8 @@ public class AuroraMCDuels extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableBreakListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisablePlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableHungerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisablePickupListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableDropListener(), this);
         Bukkit.getPluginManager().registerEvents(new ShutdownRequestListener(), this);
         Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 

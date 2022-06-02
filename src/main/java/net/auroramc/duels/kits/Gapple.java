@@ -6,6 +6,8 @@ import net.auroramc.duels.api.game.Game;
 import net.auroramc.duels.api.game.Kit;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
 import net.auroramc.duels.utils.settings.DisableBreakListener;
+import net.auroramc.duels.utils.settings.DisableDropListener;
+import net.auroramc.duels.utils.settings.DisablePickupListener;
 import net.auroramc.duels.utils.settings.DisablePlaceListener;
 import net.minecraft.server.v1_8_R3.ItemMapEmpty;
 import org.bukkit.Material;
@@ -52,6 +54,8 @@ public class Gapple extends Kit {
         StandardDeathListener.register(game);
         DisableBreakListener.register(game);
         DisablePlaceListener.register(game);
+        DisablePickupListener.register(game);
+        DisableDropListener.register(game);
     }
 
     @Override
@@ -59,6 +63,8 @@ public class Gapple extends Kit {
         StandardDeathListener.deregister(game);
         DisableBreakListener.deregister(game);
         DisablePlaceListener.deregister(game);
+        DisablePickupListener.deregister(game);
+        DisableDropListener.deregister(game);
     }
 
     @Override
