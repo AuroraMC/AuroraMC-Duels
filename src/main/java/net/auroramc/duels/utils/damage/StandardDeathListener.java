@@ -6,12 +6,17 @@ import net.auroramc.core.api.cosmetics.DeathEffect;
 import net.auroramc.core.api.cosmetics.KillMessage;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,6 +174,17 @@ public class StandardDeathListener implements Listener {
                     e.setCancelled(true);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onConsume(PlayerItemConsumeEvent e) {
+        if (e.getItem().getType() == Material.POTION) {
+            Potion potion = Potion.fromItemStack(e.getItem());
+            for (PotionEffect effect : potion.getEffects()) {
+                e.getPlayer().addPotionEffect(effect);
+            }
+            e.setItem(new ItemStack(Material.AIR));
         }
     }
 
