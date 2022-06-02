@@ -46,8 +46,8 @@ public class BuildUHCListener implements Listener {
                 } else {
                     e.getItem().setAmount(e.getItem().getAmount() - 1);
                 }
-                e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 7, 0));
-                e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, 0));
+                e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 140, 0));
+                e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
             }
         }
     }
