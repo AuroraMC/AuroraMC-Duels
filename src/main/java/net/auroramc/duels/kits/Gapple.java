@@ -22,12 +22,16 @@ public class Gapple extends Kit {
     static {
         helmet = new ItemStack(Material.DIAMOND_HELMET);
         helmet.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        helmet.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
         chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
         leggings.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        leggings.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         boots = new ItemStack(Material.DIAMOND_BOOTS);
         boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+        boots.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         sword = new ItemStack(Material.DIAMOND_SWORD);
         sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
     }
