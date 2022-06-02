@@ -118,7 +118,7 @@ public class GameRewards {
             lines.setColor(ChatColor.DARK_AQUA);
             textComponent.addExtra(lines);
 
-            TextComponent rewardsBreakdown = new TextComponent("\nGame Rewards");
+            TextComponent rewardsBreakdown = new TextComponent("\nDuel Rewards");
             rewardsBreakdown.setBold(true);
             rewardsBreakdown.setColor(ChatColor.AQUA);
             textComponent.addExtra(rewardsBreakdown);
@@ -135,10 +135,6 @@ public class GameRewards {
                 xp.addExtra("\n");
             }
 
-            textComponent.addExtra(xp);
-
-            xp = new TextComponent("+" + ((totalXP + timeXp)*4) + " Kit XP\n");
-            xp.setColor(ChatColor.DARK_GREEN);
             textComponent.addExtra(xp);
 
             TextComponent crowns = new TextComponent("+" + (this.crowns + timeXp) + " Crowns\n");

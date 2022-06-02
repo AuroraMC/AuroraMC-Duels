@@ -39,7 +39,7 @@ public class DuelInvite {
 
         textComponent.addExtra(lines);
         textComponent.addExtra("\n\n");
-        textComponent.addExtra(String.format(AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight("You have been invited to duel **%s**'s with the **%s** kit!")), inviter.getPlayer().getName(), kit.getName()));
+        textComponent.addExtra(String.format(AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight("You have been invited to duel **%s** with the **%s** kit!")), inviter.getPlayer().getName(), kit.getName()));
         textComponent.addExtra("\n\n");
 
         TextComponent accept = new TextComponent("ACCEPT");

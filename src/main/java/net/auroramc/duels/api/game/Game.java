@@ -38,10 +38,10 @@ public class Game {
 
     int gameId;
     private World world;
-    private AuroraMCDuelsPlayer player1;
-    private AuroraMCDuelsPlayer player2;
-    private DuelsMap map;
-    private Kit kit;
+    private final AuroraMCDuelsPlayer player1;
+    private final AuroraMCDuelsPlayer player2;
+    private final DuelsMap map;
+    private final Kit kit;
     private GameState gameState;
     private BukkitTask startingTask;
 
@@ -54,6 +54,7 @@ public class Game {
         this.player2 = player2;
         this.map = map;
         this.gameState = GameState.LOADING;
+        this.kit = kit;
         startTimestamp = -1;
         endTimestamp = -1;
         kit.onGameCreate(this);
@@ -197,6 +198,9 @@ public class Game {
     }
 
     public void onLeave(AuroraMCDuelsPlayer duelsPlayer) {
+        if (startingTask != null) {
+            startingTask.cancel();
+        }
         AuroraMCDuelsPlayer winner;
         if (duelsPlayer.equals(player1)) {
             //Player 2 won the game.
@@ -209,6 +213,17 @@ public class Game {
     }
 
     public void onDeath(AuroraMCDuelsPlayer duelsPlayer) {
+        duelsPlayer.getPlayer().spigot().setCollidesWithEntities(false);
+        duelsPlayer.getPlayer().setAllowFlight(true);
+        duelsPlayer.getPlayer().setFlying(true);
+        duelsPlayer.getPlayer().setGameMode(GameMode.SURVIVAL);
+        duelsPlayer.getPlayer().setHealth(20);
+        duelsPlayer.getPlayer().setFoodLevel(30);
+        duelsPlayer.getPlayer().getInventory().clear();
+        duelsPlayer.getPlayer().getInventory().setArmorContents(new ItemStack[4]);
+        duelsPlayer.getPlayer().setExp(0);
+        duelsPlayer.getPlayer().setLevel(0);
+        duelsPlayer.getPlayer().getEnderChest().clear();
         AuroraMCDuelsPlayer winner;
         if (duelsPlayer.equals(player1)) {
             //Player 2 won the game.
@@ -217,6 +232,7 @@ public class Game {
             //Player 1 won the game.
             winner = player1;
         }
+        winner.getPlayer().hidePlayer(duelsPlayer.getPlayer());
         end(winner);
     }
 
