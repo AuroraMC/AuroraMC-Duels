@@ -232,6 +232,7 @@ public class Game {
             //Player 1 won the game.
             winner = player1;
         }
+        winner.getPlayer().hidePlayer(duelsPlayer.getPlayer());
         end(winner);
     }
 
