@@ -11,7 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-public class OP extends Kit {
+public class Gapple extends Kit {
 
     private static final ItemStack helmet;
     private static final ItemStack chestplate;
@@ -32,7 +32,7 @@ public class OP extends Kit {
         sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
     }
 
-    public OP() {
+    public Gapple() {
         super(0, "Gapple", "Gapple", Material.GOLDEN_APPLE, (short)1, "ALL");
     }
 
