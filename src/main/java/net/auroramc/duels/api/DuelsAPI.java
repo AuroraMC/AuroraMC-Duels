@@ -1,8 +1,12 @@
 package net.auroramc.duels.api;
 
+import net.auroramc.core.api.utils.gui.GUIItem;
 import net.auroramc.duels.AuroraMCDuels;
+import net.auroramc.duels.api.backend.DuelsDatabaseManager;
+import net.auroramc.duels.api.game.Game;
 import net.auroramc.duels.api.game.Kit;
 import net.auroramc.duels.api.game.MapRegistry;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +20,25 @@ public class DuelsAPI {
     private static final Map<String, MapRegistry> maps;
     private static String xpBoostMessage;
     private static float xpBoostMultiplier;
-    private static List<Kit> registeredKits;
+    private static final List<Kit> registeredKits;
+
+    private static final List<Game> games;
+
+    private final static GUIItem lobbyItem;
+    private final static GUIItem prefsItem;
+    private final static GUIItem cosmeticsItem;
 
     static {
         maps = new HashMap<>();
         registeredKits = new ArrayList<>();
+
+        lobbyItem = new GUIItem(Material.WOOD_DOOR, "&a&lReturn to Lobby");
+        prefsItem = new GUIItem(Material.REDSTONE_COMPARATOR, "&a&lView Preferences");
+        cosmeticsItem = new GUIItem(Material.EMERALD, "&a&lView Cosmetics");
+
+        xpBoostMessage = DuelsDatabaseManager.getXpMessage();
+        xpBoostMultiplier = DuelsDatabaseManager.getXpMultiplier();
+        games = new ArrayList<>();
     }
 
     public static void init(AuroraMCDuels duels) {
@@ -67,5 +85,21 @@ public class DuelsAPI {
 
     public static List<Kit> getRegisteredKits() {
         return registeredKits;
+    }
+
+    public static GUIItem getCosmeticsItem() {
+        return cosmeticsItem;
+    }
+
+    public static GUIItem getLobbyItem() {
+        return lobbyItem;
+    }
+
+    public static GUIItem getPrefsItem() {
+        return prefsItem;
+    }
+
+    public static List<Game> getGames() {
+        return games;
     }
 }

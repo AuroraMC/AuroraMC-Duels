@@ -2,7 +2,12 @@ package net.auroramc.duels.kits;
 
 import net.auroramc.core.api.utils.gui.GUIItem;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
+import net.auroramc.duels.api.game.Game;
 import net.auroramc.duels.api.game.Kit;
+import net.auroramc.duels.utils.damage.StandardDeathListener;
+import net.auroramc.duels.utils.settings.DisableBreakListener;
+import net.auroramc.duels.utils.settings.DisableHungerListener;
+import net.auroramc.duels.utils.settings.DisablePlaceListener;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +38,23 @@ public class OP extends Kit {
     }
 
     public OP() {
-        super(0, "Overpowered", "Overpowered", Material.GOLDEN_APPLE, (short)1);
+        super(0, "Overpowered", "Overpowered", Material.GOLDEN_APPLE, (short)1, "ALL");
+    }
+
+    @Override
+    public void onGameCreate(Game game) {
+        StandardDeathListener.register(game);
+        DisableBreakListener.register(game);
+        DisablePlaceListener.register(game);
+        DisableHungerListener.register(game);
+    }
+
+    @Override
+    public void onGameRemove(Game game) {
+        StandardDeathListener.deregister(game);
+        DisableBreakListener.deregister(game);
+        DisablePlaceListener.deregister(game);
+        DisableHungerListener.deregister(game);
     }
 
     @Override
@@ -47,9 +68,5 @@ public class OP extends Kit {
         player.getPlayer().getInventory().setItem(2, bow);
         player.getPlayer().getInventory().setItem(3, new GUIItem(Material.GOLDEN_APPLE, null, 1, null, (short)1).getItem());
         player.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW, 1));
-    }
-
-    @Override
-    public void onGameEnd(AuroraMCDuelsPlayer player) {
     }
 }

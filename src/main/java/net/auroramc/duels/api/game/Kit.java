@@ -10,17 +10,21 @@ public abstract class Kit {
     private final String description;
     private final Material material;
     private final short data;
+    private final String mapType;
 
-    public Kit(int id, String name, String description, Material material, short data) {
+    public Kit(int id, String name, String description, Material material, short data, String mapType) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.material = material;
         this.data = data;
+        this.mapType = mapType;
     }
 
+    public abstract void onGameCreate(Game game);
+    public abstract void onGameRemove(Game game);
+
     public abstract void onGameStart(AuroraMCDuelsPlayer player);
-    public abstract void onGameEnd(AuroraMCDuelsPlayer player);
 
     public int getId() {
         return id;
@@ -40,5 +44,9 @@ public abstract class Kit {
 
     public String getName() {
         return name;
+    }
+
+    public String getMapType() {
+        return mapType;
     }
 }

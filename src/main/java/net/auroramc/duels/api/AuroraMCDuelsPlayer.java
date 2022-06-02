@@ -1,11 +1,13 @@
 package net.auroramc.duels.api;
 
 import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.duels.api.game.DuelInvite;
 import net.auroramc.duels.api.game.Game;
 import net.auroramc.duels.api.game.GameRewards;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
 
@@ -16,10 +18,15 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
     private final Map<AuroraMCDuelsPlayer, Long> latestHits;
     private GameRewards rewards;
 
+    private final Map<UUID, DuelInvite> pendingIncomingInvites;
+    private DuelInvite pendingOutgoingInvite;
+
     public AuroraMCDuelsPlayer(AuroraMCPlayer oldPlayer) {
         super(oldPlayer);
         this.game = null;
         latestHits = new HashMap<>();
+        pendingIncomingInvites = new HashMap<>();
+        pendingOutgoingInvite = null;
     }
 
     public Game getGame() {
@@ -28,6 +35,9 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
 
     public void setGame(Game game) {
         this.game = game;
+        if (game != null) {
+           rewards = new GameRewards(this);
+        }
     }
 
     public boolean isInGame() {
@@ -56,5 +66,33 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
 
     public GameRewards getRewards() {
         return rewards;
+    }
+
+    public void gameOver() {
+        rewards = null;
+    }
+
+    public void newOutgoing(DuelInvite invite) {
+        pendingOutgoingInvite = invite;
+    }
+
+    public void removeOutgoing() {
+        pendingOutgoingInvite = null;
+    }
+
+    public DuelInvite getPendingOutgoingInvite() {
+        return pendingOutgoingInvite;
+    }
+
+    public Map<UUID, DuelInvite> getPendingIncomingInvites() {
+        return pendingIncomingInvites;
+    }
+
+    public void newIncoming(DuelInvite invite) {
+        pendingIncomingInvites.put(invite.getInviter().getPlayer().getUniqueId(), invite);
+    }
+
+    public void removeIncoming(DuelInvite invite) {
+        pendingIncomingInvites.remove(invite.getInviter().getPlayer().getUniqueId());
     }
 }

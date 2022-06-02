@@ -1,14 +1,11 @@
-package net.auroramc.duels.utils;
+package net.auroramc.duels.utils.damage;
 
 import net.auroramc.core.api.AuroraMCAPI;
 import net.auroramc.core.api.cosmetics.Cosmetic;
 import net.auroramc.core.api.cosmetics.DeathEffect;
 import net.auroramc.core.api.cosmetics.KillMessage;
-import net.auroramc.duels.AuroraMCDuels;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
-import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.game.Game;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -168,6 +165,8 @@ public class StandardDeathListener implements Listener {
                     }
 
                     player.getGame().onDeath(player);
+                } else if (player.getGame().getGameState() != Game.GameState.IN_PROGRESS) {
+                    e.setCancelled(true);
                 }
             }
         }
@@ -177,7 +176,7 @@ public class StandardDeathListener implements Listener {
         games.add(game);
     }
 
-    public static void deRegister(Game game) {
+    public static void deregister(Game game) {
         games.remove(game);
     }
 

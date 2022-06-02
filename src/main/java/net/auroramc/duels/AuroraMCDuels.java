@@ -1,10 +1,15 @@
 package net.auroramc.duels;
 
+import net.auroramc.core.api.AuroraMCAPI;
 import net.auroramc.core.api.utils.ZipUtil;
 import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.DuelsMap;
 import net.auroramc.duels.api.backend.DuelsDatabaseManager;
 import net.auroramc.duels.api.game.MapRegistry;
+import net.auroramc.duels.commands.CommandDisguiseOverride;
+import net.auroramc.duels.commands.CommandHub;
+import net.auroramc.duels.commands.CommandUndisguiseOverride;
+import net.auroramc.duels.kits.OP;
 import net.auroramc.duels.listeners.LobbyListener;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -103,6 +108,13 @@ public class AuroraMCDuels extends JavaPlugin {
 
         getLogger().info("Waiting lobby copied. Registering listeners and commands...");
         Bukkit.getPluginManager().registerEvents(new LobbyListener(), this);
+
+        AuroraMCAPI.registerCommand(new CommandHub());
+        AuroraMCAPI.registerCommand(new CommandDisguiseOverride());
+        AuroraMCAPI.registerCommand(new CommandUndisguiseOverride());
+
+
+        DuelsAPI.registerKit(new OP());
     }
 
     @Override

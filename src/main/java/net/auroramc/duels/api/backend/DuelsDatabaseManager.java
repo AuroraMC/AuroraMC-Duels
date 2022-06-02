@@ -3,6 +3,7 @@ package net.auroramc.duels.api.backend;
 import net.auroramc.core.api.AuroraMCAPI;
 import net.auroramc.duels.api.DuelsAPI;
 import org.apache.commons.io.FileUtils;
+import redis.clients.jedis.Jedis;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,6 +39,22 @@ public class DuelsDatabaseManager {
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static float getXpMultiplier() {
+        try (Jedis connection = AuroraMCAPI.getDbManager().getRedisConnection()) {
+            if (connection.hexists("xpboost", "multiplier")) {
+                return Float.parseFloat(connection.hget("xpboost", "multiplier"));
+            } else {
+                return 1;
+            }
+        }
+    }
+
+    public static String getXpMessage() {
+        try (Jedis connection = AuroraMCAPI.getDbManager().getRedisConnection()) {
+            return connection.hget("xpboost", "message");
         }
     }
 
