@@ -184,7 +184,8 @@ public class StandardDeathListener implements Listener {
             for (PotionEffect effect : potion.getEffects()) {
                 e.getPlayer().addPotionEffect(effect);
             }
-            e.setItem(new ItemStack(Material.AIR));
+            e.setCancelled(true);
+            e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
         }
     }
 
