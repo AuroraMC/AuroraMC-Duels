@@ -12,6 +12,7 @@ import net.auroramc.duels.commands.CommandUndisguiseOverride;
 import net.auroramc.duels.commands.duel.CommandDuel;
 import net.auroramc.duels.kits.Archer;
 import net.auroramc.duels.kits.Gapple;
+import net.auroramc.duels.kits.NoDebuff;
 import net.auroramc.duels.kits.Sumo;
 import net.auroramc.duels.kits.Vanilla;
 import net.auroramc.duels.listeners.*;
@@ -138,6 +139,7 @@ public class AuroraMCDuels extends JavaPlugin {
         DuelsAPI.registerKit(new Sumo());
         DuelsAPI.registerKit(new Vanilla());
         DuelsAPI.registerKit(new Archer());
+        DuelsAPI.registerKit(new NoDebuff());
 
         new BukkitRunnable(){
             @Override
