@@ -252,14 +252,14 @@ public class Game {
         winnerString.append("\n");
         winnerString.append("§3§l▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆\n");
 
-        player1.sendTitle((winner == null) ? "Nobody won the game" : ((player1.equals(winner) && player1.isDisguised() && player1.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the game!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
-        player2.sendTitle((winner == null) ? "Nobody won the game" : ((player2.equals(winner) && player2.isDisguised() && player2.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the game!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
+        player1.sendTitle((winner == null) ? "Nobody won the duel" : ((player1.equals(winner) && player1.isDisguised() && player1.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the duel!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
+        player2.sendTitle((winner == null) ? "Nobody won the duel" : ((player2.equals(winner) && player2.isDisguised() && player2.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the duel!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
         if (player1.equals(winner) && player1.isDisguised() && player1.getPreferences().isHideDisguiseNameEnabled()) {
             String winnerString2 = "§3§l▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆\n" +
                     " \n \n" +
                     "§b§l" +
                     winner.getName() +
-                    " won the game!" +
+                    " won the duel!" +
                     "\n \n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
@@ -277,7 +277,7 @@ public class Game {
                     " \n \n" +
                     "§b§l" +
                     winner.getName() +
-                    " won the game!" +
+                    " won the duel!" +
                     "\n \n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
@@ -327,6 +327,8 @@ public class Game {
         new BukkitRunnable() {
             @Override
             public void run() {
+                player1.getPlayer().showPlayer(player2.getPlayer());
+                player2.getPlayer().showPlayer(player1.getPlayer());
                 handleEnd(player1);
                 handleEnd(player2);
                 Bukkit.unloadWorld(world, false);
