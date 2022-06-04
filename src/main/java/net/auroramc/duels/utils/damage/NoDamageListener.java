@@ -47,6 +47,9 @@ public class NoDamageListener implements Listener {
                             ((DeathEffect) player.getActiveCosmetics().get(Cosmetic.CosmeticType.DEATH_EFFECT)).onDeath(player);
                         }
 
+                        player.getStats().incrementStatistic(4, "deaths.FALL", 1, true);
+                        player.getStats().incrementStatistic(4, "deaths", 1, true);
+
                         player.getGame().onDeath(player);
                     }
                 }
