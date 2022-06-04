@@ -160,6 +160,9 @@ public class StandardDeathListener implements Listener {
                         }
                     }
 
+                    player.getStats().incrementStatistic(4, "deaths." + killReason.name(), 1, true);
+                    player.getStats().incrementStatistic(4, "deaths", 1, true);
+
                     player.setLastHitAt(-1);
                     player.setLastHitBy(null);
                     player.getLatestHits().clear();
