@@ -102,12 +102,6 @@ public class Game {
                 yaw = spawn.getFloat("yaw");
                 player2.getPlayer().teleport(new Location(world, x + 0.5, y, z + 0.5, yaw, 0));
 
-                player2.getScoreboard().setLine(9, kit.getName());
-                player2.getScoreboard().setLine(6, map.getName());
-
-                player1.getScoreboard().setLine(9, kit.getName());
-                player1.getScoreboard().setLine(6, map.getName());
-
                 //Reset player states.
                 player1.getPlayer().setGameMode(GameMode.SURVIVAL);
                 player1.getPlayer().setHealth(20);
@@ -411,18 +405,19 @@ public class Game {
         PlayerScoreboard scoreboard = pl.getScoreboard();
         scoreboard.clear();
         scoreboard.setTitle("&3-= &b&lDUELS&r &3=-");
-        scoreboard.setLine(10, "&b&l«KIT»");
-        scoreboard.setLine(9, ((pl.getGame() != null)?pl.getGame().getKit().getName():"None  "));
+        scoreboard.setLine(14, "        ");
+        scoreboard.setLine(13, "&b&l«TOTAL WINS»");
+        scoreboard.setLine(12, pl.getStats().getStatistic(4, "gamesWon") + "");
+        scoreboard.setLine(11, "     ");
+        scoreboard.setLine(10, "&b&l«TOTAL LOSSES»");
+        long losses = (pl.getStats().getStatistic(1, "gamesPlayed") - pl.getStats().getStatistic(1, "gamesWon"));
+        scoreboard.setLine(9, losses + "");
         scoreboard.setLine(8, "  ");
-        scoreboard.setLine(7, "&b&l«MAP»");
-        scoreboard.setLine(6, ((pl.getGame() != null)?pl.getGame().getMap().getName():"None "));
+        scoreboard.setLine(7, "&b&l«TOTAL KILLS»");
+        scoreboard.setLine(6, pl.getStats().getStatistic(4, "kills") + "");
         scoreboard.setLine(5, "   ");
-        scoreboard.setLine(4, "&b&l«SERVER»");
-        if (pl.getPreferences().isHideDisguiseNameEnabled() && pl.isDisguised()) {
-            scoreboard.setLine(3, "&oHidden");
-        } else {
-            scoreboard.setLine(3, AuroraMCAPI.getServerInfo().getName());
-        }
+        scoreboard.setLine(4, "&b&l«TOTAL DEATHS»");
+        scoreboard.setLine(3, pl.getStats().getStatistic(4, "deaths") + "");
         scoreboard.setLine(2, "    ");
         scoreboard.setLine(1, "&7auroramc.net");
         pl.getPlayer().getInventory().setItem(8, DuelsAPI.getLobbyItem().getItem());

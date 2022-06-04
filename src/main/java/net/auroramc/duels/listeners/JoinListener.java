@@ -84,18 +84,19 @@ public class JoinListener implements Listener {
         }
         PlayerScoreboard scoreboard = player.getScoreboard();
         scoreboard.setTitle("&3-= &b&lDUELS&r &3=-");
-        scoreboard.setLine(10, "&b&l«KIT»");
-        scoreboard.setLine(9, ((player.getGame() != null)?player.getGame().getKit().getName():"None  "));
+        scoreboard.setLine(14, "        ");
+        scoreboard.setLine(13, "&b&l«TOTAL WINS»");
+        scoreboard.setLine(12, player.getStats().getStatistic(4, "gamesWon") + "");
+        scoreboard.setLine(11, "     ");
+        scoreboard.setLine(10, "&b&l«TOTAL LOSSES»");
+        long losses = (player.getStats().getStatistic(1, "gamesPlayed") - player.getStats().getStatistic(1, "gamesWon"));
+        scoreboard.setLine(9, losses + "");
         scoreboard.setLine(8, "  ");
-        scoreboard.setLine(7, "&b&l«MAP»");
-        scoreboard.setLine(6, ((player.getGame() != null)?player.getGame().getMap().getName():"None "));
+        scoreboard.setLine(7, "&b&l«TOTAL KILLS»");
+        scoreboard.setLine(6, player.getStats().getStatistic(4, "kills") + "");
         scoreboard.setLine(5, "   ");
-        scoreboard.setLine(4, "&b&l«SERVER»");
-        if (player.getPreferences().isHideDisguiseNameEnabled() && player.isDisguised()) {
-            scoreboard.setLine(3, "&oHidden");
-        } else {
-            scoreboard.setLine(3, AuroraMCAPI.getServerInfo().getName());
-        }
+        scoreboard.setLine(4, "&b&l«TOTAL DEATHS»");
+        scoreboard.setLine(3, player.getStats().getStatistic(4, "deaths") + "");
         scoreboard.setLine(2, "    ");
         scoreboard.setLine(1, "&7auroramc.net");
 
