@@ -173,8 +173,19 @@ public class StandardDeathListener implements Listener {
                     }
 
                     player.getGame().onDeath(player);
-                } else if (player.getGame().getGameState() != Game.GameState.IN_PROGRESS) {
-                    e.setCancelled(true);
+                } else {
+                    if (e instanceof EntityDamageByEntityEvent) {
+                        if (((EntityDamageByEntityEvent) e).getDamager().equals(e.getEntity())) {
+                            e.setCancelled(true);
+                        } else if (((EntityDamageByEntityEvent) e).getDamager() instanceof Projectile) {
+                            if (((Projectile)((EntityDamageByEntityEvent) e).getDamager()).getShooter().equals(e.getEntity())) {
+                                e.setCancelled(true);
+                            }
+                        }
+                    }
+                    if (player.getGame().getGameState() != Game.GameState.IN_PROGRESS) {
+                        e.setCancelled(true);
+                    }
                 }
             }
         }
