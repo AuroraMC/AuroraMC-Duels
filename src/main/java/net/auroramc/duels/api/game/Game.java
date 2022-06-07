@@ -389,13 +389,6 @@ public class Game {
         if (endTimestamp != -1) {
             pl.getStats().addGameTime(endTimestamp - startTimestamp, true);
         }
-
-        for (Map.Entry<Cosmetic.CosmeticType, Cosmetic> entry : pl.getActiveCosmetics().entrySet()) {
-            if (entry.getKey() == Cosmetic.CosmeticType.GADGET || entry.getKey() == Cosmetic.CosmeticType.BANNER || entry.getKey() == Cosmetic.CosmeticType.HAT || entry.getKey() == Cosmetic.CosmeticType.PARTICLE) {
-                entry.getValue().onEquip(pl);
-                pl.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Cosmetics", String.format("**%s** has been re-equipped.", entry.getValue().getName())));
-            }
-        }
         if (pl.getRewards() != null) {
             pl.getRewards().apply(true);
             pl.gameOver();
