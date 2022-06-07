@@ -111,26 +111,34 @@ public class DuelInvite {
         invited.removeIncoming(this);
         inviter.removeOutgoing();
 
-        List<DuelsMap> maps = DuelsAPI.getMaps().get("DUELS").getMaps().stream().filter(duelsMap -> duelsMap.getMapData().getString("duel").equalsIgnoreCase(kit.getMapType())).collect(Collectors.toList());
-        DuelsMap map = maps.get(new Random().nextInt(maps.size()));
+        if (inviter.getPlayer().isOnline()) {
+            List<DuelsMap> maps = DuelsAPI.getMaps().get("DUELS").getMaps().stream().filter(duelsMap -> duelsMap.getMapData().getString("duel").equalsIgnoreCase(kit.getMapType())).collect(Collectors.toList());
+            DuelsMap map = maps.get(new Random().nextInt(maps.size()));
 
-        Game game = new Game(invited, inviter, map, kit);
-        inviter.setGame(game);
-        invited.setGame(game);
-        DuelsAPI.getGames().add(game);
+            Game game = new Game(invited, inviter, map, kit);
+            inviter.setGame(game);
+            invited.setGame(game);
+            DuelsAPI.getGames().add(game);
+        } else {
+            invited.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "That player is no longer online!"));
+        }
         this.task.cancel();
     }
 
     public void reject() {
         invited.removeIncoming(this);
         invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** was rejected.", inviter.getPlayer().getName())));
-        inviter.removeOutgoing();
-        inviter.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite to **%s** was rejected.", invited.getPlayer().getName())));
+        if (inviter.getPlayer().isOnline()) {
+            inviter.removeOutgoing();
+            inviter.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite to **%s** was rejected.", invited.getPlayer().getName())));
+        }
         this.task.cancel();
     }
     public void cancel() {
-        invited.removeIncoming(this);
-        invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** was cancelled.", inviter.getPlayer().getName())));
+        if (invited.getPlayer().isOnline()) {
+            invited.removeIncoming(this);
+            invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** was cancelled.", inviter.getPlayer().getName())));
+        }
         inviter.removeOutgoing();
         inviter.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite to **%s** was cancelled.", invited.getPlayer().getName())));
         this.task.cancel();
