@@ -21,24 +21,30 @@ public class ShutdownRequestListener implements Listener {
     @EventHandler
     public void onServerCloseRequest(ServerCloseRequestEvent e) {
         if (e.isEmergency() || DuelsAPI.getGames().size() == 0) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Server Manager", "This server is restarting" + ((!e.isEmergency())?" for an update":"") + ". You are being sent to a lobby."));
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Lobby");
-                out.writeUTF(player.getUniqueId().toString());
-                player.sendPluginMessage(AuroraMCAPI.getCore(), "BungeeCord", out.toByteArray());
-            }
-            //Wait 10 seconds, then close the server
-            new BukkitRunnable(){
-                @Override
-                public void run() {
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.kickPlayer(AuroraMCAPI.getFormatter().pluginMessage("Server Manager", "This server is restarting.\n\nYou can reconnect to the network to continue playing!"));
-                    }
-                    AuroraMCAPI.setShuttingDown(true);
-                    CommunicationUtils.sendMessage(new ProtocolMessage(Protocol.CONFIRM_SHUTDOWN, "Mission Control", e.getType(), AuroraMCAPI.getServerInfo().getName(), AuroraMCAPI.getServerInfo().getNetwork().name()));
+            if (Bukkit.getOnlinePlayers().size() == 0) {
+                //There is no-one online, shutdown now.
+                AuroraMCAPI.setShuttingDown(true);
+                CommunicationUtils.sendMessage(new ProtocolMessage(Protocol.CONFIRM_SHUTDOWN, "Mission Control", e.getType(), AuroraMCAPI.getServerInfo().getName(), AuroraMCAPI.getServerInfo().getNetwork().name()));
+            } else {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Server Manager", "This server is restarting" + ((!e.isEmergency())?" for an update":"") + ". You are being sent to a lobby."));
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("Lobby");
+                    out.writeUTF(player.getUniqueId().toString());
+                    player.sendPluginMessage(AuroraMCAPI.getCore(), "BungeeCord", out.toByteArray());
                 }
-            }.runTaskLater(AuroraMCAPI.getCore(), 200);
+                //Wait 10 seconds, then close the server
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            player.kickPlayer(AuroraMCAPI.getFormatter().pluginMessage("Server Manager", "This server is restarting.\n\nYou can reconnect to the network to continue playing!"));
+                        }
+                        AuroraMCAPI.setShuttingDown(true);
+                        CommunicationUtils.sendMessage(new ProtocolMessage(Protocol.CONFIRM_SHUTDOWN, "Mission Control", e.getType(), AuroraMCAPI.getServerInfo().getName(), AuroraMCAPI.getServerInfo().getNetwork().name()));
+                    }
+                }.runTaskLater(AuroraMCAPI.getCore(), 200);
+            }
         } else {
             //Set that it is awaiting a restart, then restart when the game is over.
             DuelsAPI.setAwaitingRestart(true);
