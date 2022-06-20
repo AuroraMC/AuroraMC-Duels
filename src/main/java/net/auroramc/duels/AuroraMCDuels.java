@@ -9,6 +9,10 @@ import net.auroramc.duels.api.game.MapRegistry;
 import net.auroramc.duels.commands.CommandDisguiseOverride;
 import net.auroramc.duels.commands.CommandHub;
 import net.auroramc.duels.commands.CommandUndisguiseOverride;
+import net.auroramc.duels.commands.admin.CommandEffect;
+import net.auroramc.duels.commands.admin.CommandGameMode;
+import net.auroramc.duels.commands.admin.CommandGive;
+import net.auroramc.duels.commands.admin.CommandMob;
 import net.auroramc.duels.commands.duel.CommandDuel;
 import net.auroramc.duels.kits.*;
 import net.auroramc.duels.listeners.*;
@@ -130,6 +134,10 @@ public class AuroraMCDuels extends JavaPlugin {
         AuroraMCAPI.registerCommand(new CommandDuel());
         AuroraMCAPI.registerCommand(new CommandDisguiseOverride());
         AuroraMCAPI.registerCommand(new CommandUndisguiseOverride());
+        AuroraMCAPI.registerCommand(new CommandGameMode());
+        AuroraMCAPI.registerCommand(new CommandEffect());
+        AuroraMCAPI.registerCommand(new CommandGive());
+        AuroraMCAPI.registerCommand(new CommandMob());
 
 
         DuelsAPI.registerKit(new Gapple());
