@@ -6,6 +6,7 @@ import net.auroramc.core.api.cosmetics.DeathEffect;
 import net.auroramc.core.api.cosmetics.KillMessage;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
@@ -34,7 +35,8 @@ public class StandardDeathListener implements Listener {
         if (e.getEntity() instanceof Player) {
             AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getEntity());
             if (player.isInGame() && games.contains(player.getGame())) {
-                if (e.getFinalDamage() > ((Player) e.getEntity()).getHealth()) {
+                if (e.getFinalDamage() >= ((Player) e.getEntity()).getHealth()) {
+                    Bukkit.broadcastMessage("1");
                     e.setDamage(0);
 
                     Entity entity = null;
@@ -96,6 +98,7 @@ public class StandardDeathListener implements Listener {
                             killReason = KillMessage.KillReason.ENTITY;
                         }
                     } else {
+                        Bukkit.broadcastMessage("2");
                         switch (e.getCause()) {
                             case FALL: {
                                 killReason = KillMessage.KillReason.FALL;
@@ -138,6 +141,7 @@ public class StandardDeathListener implements Listener {
                         }
                     }
                     if (killer != null) {
+                        Bukkit.broadcastMessage("3");
                         if (killer.getActiveCosmetics().containsKey(Cosmetic.CosmeticType.KILL_MESSAGE)) {
                             killMessage = (KillMessage) killer.getActiveCosmetics().get(Cosmetic.CosmeticType.KILL_MESSAGE);
                         } else {
@@ -172,7 +176,10 @@ public class StandardDeathListener implements Listener {
                         ((DeathEffect)player.getActiveCosmetics().get(Cosmetic.CosmeticType.DEATH_EFFECT)).onDeath(player);
                     }
 
+                    Bukkit.broadcastMessage("4");
+
                     player.getGame().onDeath(player);
+                    Bukkit.broadcastMessage("5");
                 } else {
                     if (e instanceof EntityDamageByEntityEvent) {
                         if (((EntityDamageByEntityEvent) e).getDamager().equals(e.getEntity())) {
