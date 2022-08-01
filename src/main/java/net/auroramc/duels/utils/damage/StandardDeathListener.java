@@ -34,7 +34,7 @@ public class StandardDeathListener implements Listener {
         if (e.getEntity() instanceof Player) {
             AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getEntity());
             if (player.isInGame() && games.contains(player.getGame())) {
-                if (e.getFinalDamage() > ((Player) e.getEntity()).getHealth()) {
+                if (e.getFinalDamage() >= ((Player) e.getEntity()).getHealth()) {
                     e.setDamage(0);
 
                     Entity entity = null;
@@ -171,6 +171,7 @@ public class StandardDeathListener implements Listener {
                     if (player.getActiveCosmetics().containsKey(Cosmetic.CosmeticType.DEATH_EFFECT)) {
                         ((DeathEffect)player.getActiveCosmetics().get(Cosmetic.CosmeticType.DEATH_EFFECT)).onDeath(player);
                     }
+
 
                     player.getGame().onDeath(player);
                 } else {
