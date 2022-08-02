@@ -30,7 +30,7 @@ public class DisableMoveListener implements Listener {
         if (!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
             AuroraMCPlayer player = AuroraMCAPI.getPlayer(e.getPlayer());
             AuroraMCDuelsPlayer dp = (AuroraMCDuelsPlayer) player;
-            if (dp.isInGame()) {
+            if (dp.isInGame() && dp.getGame().getGameState() == Game.GameState.IN_PROGRESS) {
                 int highX = 0, lowX = 0, highY = 0, lowY = 0, highZ = 0, lowZ = 0;
                 JSONObject a = dp.getGame().getMap().getMapData().getJSONObject("border_a");
                 JSONObject b = dp.getGame().getMap().getMapData().getJSONObject("border_b");
