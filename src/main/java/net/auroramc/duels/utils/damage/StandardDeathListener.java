@@ -4,6 +4,7 @@ import net.auroramc.core.api.AuroraMCAPI;
 import net.auroramc.core.api.cosmetics.Cosmetic;
 import net.auroramc.core.api.cosmetics.DeathEffect;
 import net.auroramc.core.api.cosmetics.KillMessage;
+import net.auroramc.duels.AuroraMCDuels;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
 import org.bukkit.Material;
@@ -186,6 +187,14 @@ public class StandardDeathListener implements Listener {
                     }
                     if (player.getGame().getGameState() != Game.GameState.IN_PROGRESS) {
                         e.setCancelled(true);
+                    }
+                    if (!e.isCancelled() && e instanceof EntityDamageByEntityEvent) {
+                        AuroraMCDuelsPlayer player1 = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) ((EntityDamageByEntityEvent) e).getDamager());
+                        long time = System.currentTimeMillis();
+                        player.setLastHitBy(player1);
+                        player.setLastHitAt(time);
+                        player.getLatestHits().put(player1, time);
+                        player1.getStats().incrementStatistic(4, "damageDealt", Math.round(e.getFinalDamage() * 100), true);
                     }
                 }
             }
