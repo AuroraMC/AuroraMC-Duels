@@ -38,6 +38,8 @@ public class NoDamageListener implements Listener {
             if (e.getFrom().getBlock().getType().equals(e.getTo().getBlock().getType())) {
                 if (e.getTo().getBlock().isLiquid()) {
                     if (e.getTo().getBlock().getType() == Material.WATER || e.getTo().getBlock().getType() == Material.LAVA || e.getTo().getBlock().getType() == Material.STATIONARY_LAVA || e.getTo().getBlock().getType() == Material.STATIONARY_WATER) {
+                        player.getLastHitBy().getStats().incrementStatistic(4, "kills", 1, true);
+                        player.getLastHitBy().getRewards().addXp("Kills", 25);
                         player.setLastHitAt(-1);
                         player.setLastHitBy(null);
                         player.getLatestHits().clear();
@@ -61,7 +63,17 @@ public class NoDamageListener implements Listener {
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getEntity());
-            if (player.isInGame() && games.contains(player.getGame())) e.setDamage(0);
+            if (player.isInGame() && games.contains(player.getGame()))  {
+                e.setDamage(0);
+                if (e instanceof EntityDamageByEntityEvent) {
+                    AuroraMCDuelsPlayer player1 = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) ((EntityDamageByEntityEvent) e).getDamager());
+                    long time = System.currentTimeMillis();
+                    player.setLastHitBy(player1);
+                    player.setLastHitAt(time);
+                    player.getLatestHits().put(player1, time);
+                    player1.getStats().incrementStatistic(4, "damageDealt", Math.round(e.getFinalDamage() * 100), true);
+                }
+            }
         }
     }
 
