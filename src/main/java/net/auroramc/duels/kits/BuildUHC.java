@@ -44,7 +44,7 @@ public class BuildUHC extends Kit {
 
         bow = new ItemStack(Material.BOW);
         bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 3);
-        meta = sword.getItemMeta();
+        meta = bow.getItemMeta();
         meta.spigot().setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         bow.setItemMeta(meta);
