@@ -25,22 +25,22 @@ public class Archer extends Kit {
     private static final ItemStack bow;
 
     static {
-        helmet = new ItemStack(Material.LEATHER_HELMET);
+        helmet = new ItemStack(Material.CHAINMAIL_HELMET);
         ItemMeta helmetmeta = helmet.getItemMeta();
         helmetmeta.spigot().setUnbreakable(true);
         helmetmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         helmet.setItemMeta(helmetmeta);
-        chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+        chestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
         ItemMeta chestplatemeta = chestplate.getItemMeta();
         chestplatemeta.spigot().setUnbreakable(true);
         chestplatemeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         chestplate.setItemMeta(chestplatemeta);
-        leggings = new ItemStack(Material.LEATHER_LEGGINGS);
+        leggings = new ItemStack(Material.CHAINMAIL_LEGGINGS);
         ItemMeta leggingsmeta = leggings.getItemMeta();
         leggingsmeta.spigot().setUnbreakable(true);
         leggingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         leggings.setItemMeta(leggingsmeta);
-        boots = new ItemStack(Material.LEATHER_BOOTS);
+        boots = new ItemStack(Material.CHAINMAIL_BOOTS);
         ItemMeta bootsmeta = boots.getItemMeta();
         bootsmeta.spigot().setUnbreakable(true);
         bootsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
