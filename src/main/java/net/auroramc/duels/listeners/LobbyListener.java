@@ -137,8 +137,13 @@ public class LobbyListener implements Listener {
 
     public static void updateHeaderFooter(CraftPlayer player2) {
         try {
-            IChatBaseComponent header = IChatBaseComponent.ChatSerializer.a("{\"text\": \"DUELS\",\"color\":\"dark_aqua\",\"bold\":\"true\"}");
-            IChatBaseComponent footer = IChatBaseComponent.ChatSerializer.a("{\"text\": \"Purchase ranks, cosmetics and more at store.auroramc.net!\",\"color\":\"aqua\",\"bold\":\"false\"}");
+            AuroraMCDuelsPlayer dp = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(player2);
+            IChatBaseComponent header = IChatBaseComponent.ChatSerializer.a("{\"text\": \"§3§lAURORAMC NETWORK         §b§lAURORAMC.NET\",\"color\":\"dark_aqua\",\"bold\":\"false\"}");
+            IChatBaseComponent footer = IChatBaseComponent.ChatSerializer.a("{\"text\": \"\n§fYou are currently connected to §b" + ((AuroraMCAPI.getPlayer(player2).isDisguised() && AuroraMCAPI.getPlayer(player2).getPreferences().isHideDisguiseNameEnabled())?"§oHidden":AuroraMCAPI.getServerInfo().getName()) + "\n\n" +
+                    "§rStatus §3§l» §b" + ((dp != null && dp.isInGame())?dp.getGame().getGameState().toString():"Not In Game") + "\n" +
+                    "§rKit §3§l» §b" + ((dp != null && dp.isInGame()) ? dp.getGame().getKit().getName() : "None") + "\n" +
+                    "§rMap §3§l» §b" + ((dp != null && dp.isInGame()) ? dp.getGame().getMap().getName() : "None") + "\n" +
+                    "\",\"color\":\"aqua\",\"bold\":\"false\"}");
 
             PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
             Field ff = packet.getClass().getDeclaredField("a");

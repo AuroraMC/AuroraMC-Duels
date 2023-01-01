@@ -4,12 +4,14 @@ import net.auroramc.core.api.AuroraMCAPI;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.DuelsMap;
+import net.auroramc.duels.listeners.LobbyListener;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -119,7 +121,9 @@ public class DuelInvite {
 
             Game game = new Game(invited, inviter, map, kit);
             inviter.setGame(game);
+            LobbyListener.updateHeaderFooter((CraftPlayer) inviter.getPlayer());
             invited.setGame(game);
+            LobbyListener.updateHeaderFooter((CraftPlayer) invited.getPlayer());
             DuelsAPI.getGames().add(game);
         } else {
             invited.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "That player is no longer online!"));
