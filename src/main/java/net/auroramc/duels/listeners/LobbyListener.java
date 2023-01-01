@@ -12,6 +12,8 @@ import net.auroramc.core.gui.preferences.Preferences;
 import net.auroramc.duels.AuroraMCDuels;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
+import net.auroramc.duels.api.game.DuelInvite;
+import net.auroramc.duels.gui.KitSelection;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
@@ -32,6 +34,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.PlayerInventory;
@@ -184,6 +187,19 @@ public class LobbyListener implements Listener {
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractAtEntityEvent e) {
+        if (e.getPlayer().getItemInHand() != null && e.getPlayer().getItemInHand().getType() != Material.AIR) {
+            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+            if (e.getRightClicked() instanceof Player && !player.isInGame()) {
+                KitSelection selection = new KitSelection(player, ((AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getRightClicked())));
+                selection.open(player);
+                AuroraMCAPI.openGUI(player, selection);
+                e.setCancelled(true);
             }
         }
     }
