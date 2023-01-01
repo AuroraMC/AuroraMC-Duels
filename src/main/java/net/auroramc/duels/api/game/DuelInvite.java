@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -67,6 +68,7 @@ public class DuelInvite {
 
 
         invited.getPlayer().getPlayer().spigot().sendMessage(textComponent);
+        invited.getPlayer().playSound(invited.getPlayer().getLocation(), Sound.NOTE_PLING, 100, 2);
         invited.newIncoming(this);
 
         textComponent = new TextComponent("");
