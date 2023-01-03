@@ -121,9 +121,9 @@ public class DuelInvite {
 
             Game game = new Game(invited, inviter, map, kit);
             inviter.setGame(game);
-            LobbyListener.updateHeaderFooter((CraftPlayer) inviter.getPlayer());
+            LobbyListener.updateHeaderFooter(inviter, (CraftPlayer) inviter.getPlayer());
             invited.setGame(game);
-            LobbyListener.updateHeaderFooter((CraftPlayer) invited.getPlayer());
+            LobbyListener.updateHeaderFooter(invited, (CraftPlayer) invited.getPlayer());
             DuelsAPI.getGames().add(game);
         } else {
             invited.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "That player is no longer online!"));

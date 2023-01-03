@@ -41,7 +41,6 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        LobbyListener.updateHeaderFooter((CraftPlayer) e.getPlayer());
         e.getPlayer().setFlying(false);
         e.getPlayer().setAllowFlight(false);
         e.getPlayer().setGameMode(GameMode.SURVIVAL);
@@ -103,6 +102,8 @@ public class JoinListener implements Listener {
         player.getPlayer().getInventory().setItem(8, DuelsAPI.getLobbyItem().getItem());
         player.getPlayer().getInventory().setItem(7, DuelsAPI.getPrefsItem().getItem());
         player.getPlayer().getInventory().setItem(4, DuelsAPI.getCosmeticsItem().getItem());
+
+        LobbyListener.updateHeaderFooter(player, (CraftPlayer) e.getPlayer().getPlayer());
 
     }
 
