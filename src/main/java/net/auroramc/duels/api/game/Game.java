@@ -266,7 +266,8 @@ public class Game {
                     "§b§l" +
                     winner.getName() +
                     " won the duel!" +
-                    "\n \n \n" +
+                    "\nRemaining Hearts: §c"  + winner.getPlayer().getHealth() + "❤§r" +
+                    "\n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
                     " by " +
