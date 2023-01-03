@@ -251,7 +251,7 @@ public class Game {
         winnerString.append((winner == null) ? "Nobody" : winner.getPlayer().getName());
         winnerString.append(" won the duel!\n");
         if (winner != null) {
-            winnerString.append("Remaining Hearts: §c"  + winner.getPlayer().getHealth() + "❤§r");
+            winnerString.append("Remaining Hearts: §c").append((Math.round(winner.getPlayer().getHealth() * 10))/10.0).append("❤§r");
         }
         winnerString.append(" \n \n");
         winnerString.append("§b§lMap: §r");
@@ -263,13 +263,15 @@ public class Game {
 
         player1.sendTitle((winner == null) ? "Nobody won the duel" : ((player1.equals(winner) && player1.isDisguised() && player1.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the duel!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
         player2.sendTitle((winner == null) ? "Nobody won the duel" : ((player2.equals(winner) && player2.isDisguised() && player2.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the duel!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
+
+
         if (player1.equals(winner) && player1.isDisguised() && player1.getPreferences().isHideDisguiseNameEnabled()) {
             String winnerString2 = "§3§l▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆\n" +
                     " \n \n" +
                     "§b§l" +
                     winner.getName() +
                     " won the duel!" +
-                    "\nRemaining Hearts: §c"  + winner.getPlayer().getHealth() + "❤§r" +
+                    "\nRemaining Hearts: §c"  + (Math.round(winner.getPlayer().getHealth() * 10))/10.0 + "❤§r" +
                     "\n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
@@ -288,7 +290,7 @@ public class Game {
                     "§b§l" +
                     winner.getName() +
                     " won the duel!" +
-                    "\nRemaining Hearts: §c"  + winner.getPlayer().getHealth() + "❤§r" +
+                    "\nRemaining Hearts: §c"  + (Math.round(winner.getPlayer().getHealth() * 10))/10.0 + "❤§r" +
                     "\n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
