@@ -197,7 +197,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractAtEntityEvent e) {
-        if (e.getPlayer().getItemInHand() != null && e.getPlayer().getItemInHand().getType() != Material.AIR) {
+        if (e.getPlayer().getItemInHand() == null && e.getPlayer().getItemInHand().getType() != Material.AIR) {
             AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
             if (e.getRightClicked() instanceof Player && !player.isInGame()) {
                 KitSelection selection = new KitSelection(player, ((AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getRightClicked())));
