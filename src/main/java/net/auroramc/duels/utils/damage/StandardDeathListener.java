@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffect;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class StandardDeathListener implements Listener {
 
@@ -189,7 +190,11 @@ public class StandardDeathListener implements Listener {
                         e.setCancelled(true);
                     }
                     if (!e.isCancelled() && e instanceof EntityDamageByEntityEvent) {
-                        AuroraMCDuelsPlayer player1 = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) ((EntityDamageByEntityEvent) e).getDamager());
+                        Object entity = ((EntityDamageByEntityEvent) e).getDamager();
+                        if (entity instanceof Arrow) {
+                            entity = ((Arrow) entity).getShooter();
+                        }
+                        AuroraMCDuelsPlayer player1 = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) entity);
                         long time = System.currentTimeMillis();
                         player.setLastHitBy(player1);
                         player.setLastHitAt(time);
