@@ -249,8 +249,11 @@ public class Game {
         winnerString.append(" \n \n");
         winnerString.append("§b§l");
         winnerString.append((winner == null) ? "Nobody" : winner.getPlayer().getName());
-        winnerString.append(" won the duel!");
-        winnerString.append("\n \n \n");
+        winnerString.append(" won the duel!\n");
+        if (winner != null) {
+            winnerString.append("Remaining Hearts: §c"  + winner.getPlayer().getHealth() + "❤§r");
+        }
+        winnerString.append(" \n \n");
         winnerString.append("§b§lMap: §r");
         winnerString.append(map.getName());
         winnerString.append(" by ");
@@ -266,7 +269,8 @@ public class Game {
                     "§b§l" +
                     winner.getName() +
                     " won the duel!" +
-                    "\n \n \n" +
+                    "\nRemaining Hearts: §c"  + winner.getPlayer().getHealth() + "❤§r" +
+                    "\n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
                     " by " +
