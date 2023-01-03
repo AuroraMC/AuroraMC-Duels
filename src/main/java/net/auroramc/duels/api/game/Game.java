@@ -160,8 +160,8 @@ public class Game {
                 }
 
                 gameState = GameState.STARTING;
-                LobbyListener.updateHeaderFooter((CraftPlayer) player1.getPlayer());
-                LobbyListener.updateHeaderFooter((CraftPlayer) player2.getPlayer());
+                LobbyListener.updateHeaderFooter(player1, (CraftPlayer) player1.getPlayer());
+                LobbyListener.updateHeaderFooter(player2, (CraftPlayer) player2.getPlayer());
                 startingTask = new BukkitRunnable(){
                     int i = 10;
                     @Override
@@ -183,8 +183,8 @@ public class Game {
                             case 0: {
                                 startTimestamp = System.currentTimeMillis();
                                 gameState = GameState.IN_PROGRESS;
-                                LobbyListener.updateHeaderFooter((CraftPlayer) player1.getPlayer());
-                                LobbyListener.updateHeaderFooter((CraftPlayer) player2.getPlayer());
+                                LobbyListener.updateHeaderFooter(player1, (CraftPlayer) player1.getPlayer());
+                                LobbyListener.updateHeaderFooter(player2, (CraftPlayer) player2.getPlayer());
                                 player2.getPlayer().playSound(player2.getPlayer().getLocation(), Sound.NOTE_PLING, 100, 2f);
                                 player1.getPlayer().playSound(player1.getPlayer().getLocation(), Sound.NOTE_PLING, 100, 2f);
                                 player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Game", "Fight!"));
@@ -242,8 +242,8 @@ public class Game {
     private void end(AuroraMCDuelsPlayer winner) {
         gameState = GameState.ENDING;
         endTimestamp = System.currentTimeMillis();
-        LobbyListener.updateHeaderFooter((CraftPlayer) player1.getPlayer());
-        LobbyListener.updateHeaderFooter((CraftPlayer) player2.getPlayer());
+        LobbyListener.updateHeaderFooter(player1, (CraftPlayer) player1.getPlayer());
+        LobbyListener.updateHeaderFooter(player2, (CraftPlayer) player2.getPlayer());
         StringBuilder winnerString = new StringBuilder();
         winnerString.append("§3§l▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆\n");
         winnerString.append(" \n \n");
@@ -402,7 +402,7 @@ public class Game {
             pl.getRewards().apply(true);
             pl.gameOver();
             pl.setGame(null);
-            LobbyListener.updateHeaderFooter((CraftPlayer) pl.getPlayer());
+            LobbyListener.updateHeaderFooter(pl, (CraftPlayer) pl.getPlayer());
         }
 
         PlayerScoreboard scoreboard = pl.getScoreboard();
