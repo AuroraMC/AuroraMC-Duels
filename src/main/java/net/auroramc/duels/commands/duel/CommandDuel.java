@@ -33,6 +33,7 @@ public class CommandDuel extends Command {
         }
         if (player.isVanished()) {
             player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "You cannot duel someone while vanished."));
+            return;
         }
         if (args.size() >= 1) {
             switch (args.get(0).toLowerCase()) {
@@ -65,6 +66,11 @@ public class CommandDuel extends Command {
 
                         if (player1.equals(player)) {
                             player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "You can't invite yourself to a duel, silly!"));
+                            return;
+                        }
+
+                        if (player1.isVanished()) {
+                            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("No match found for [**%s**]", args.get(0))));
                             return;
                         }
 

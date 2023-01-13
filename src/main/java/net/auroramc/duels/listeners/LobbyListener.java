@@ -199,7 +199,7 @@ public class LobbyListener implements Listener {
     public void onPlayerInteract(PlayerInteractAtEntityEvent e) {
         if (e.getPlayer().getItemInHand() == null || e.getPlayer().getItemInHand().getType() == Material.AIR) {
             AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
-            if (e.getRightClicked() instanceof Player && !player.isInGame()) {
+            if (e.getRightClicked() instanceof Player && !player.isInGame() && !player.isVanished() && !AuroraMCAPI.getPlayer((Player) e.getRightClicked()).isVanished()) {
                 KitSelection selection = new KitSelection(player, ((AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getRightClicked())));
                 selection.open(player);
                 AuroraMCAPI.openGUI(player, selection);
