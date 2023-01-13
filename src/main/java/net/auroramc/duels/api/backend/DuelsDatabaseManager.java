@@ -19,7 +19,7 @@ public class DuelsDatabaseManager {
 
     public static void downloadMaps() {
         try (Connection connection = AuroraMCAPI.getDbManager().getMySQLConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM maps WHERE parse_version = 'LIVE'");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM maps" + ((AuroraMCAPI.isTestServer())?" ORDER BY last_modified DESC":" WHERE parse_version = 'LIVE'"));
             ResultSet set = statement.executeQuery();
             File file = new File(DuelsAPI.getDuels().getDataFolder(), "zips");
             if (file.exists()) {
