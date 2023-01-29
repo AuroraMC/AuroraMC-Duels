@@ -12,6 +12,8 @@ import net.auroramc.core.gui.preferences.Preferences;
 import net.auroramc.duels.AuroraMCDuels;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
+import net.auroramc.duels.api.game.DuelInvite;
+import net.auroramc.duels.gui.KitSelection;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
@@ -32,6 +34,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.PlayerInventory;
@@ -132,10 +135,14 @@ public class LobbyListener implements Listener {
         e.setCancelled(true);
     }
 
-    public static void updateHeaderFooter(CraftPlayer player2) {
+    public static void updateHeaderFooter(AuroraMCDuelsPlayer player, CraftPlayer player2) {
         try {
-            IChatBaseComponent header = IChatBaseComponent.ChatSerializer.a("{\"text\": \"DUELS\",\"color\":\"dark_aqua\",\"bold\":\"true\"}");
-            IChatBaseComponent footer = IChatBaseComponent.ChatSerializer.a("{\"text\": \"Purchase ranks, cosmetics and more at store.auroramc.net!\",\"color\":\"aqua\",\"bold\":\"false\"}");
+            IChatBaseComponent header = IChatBaseComponent.ChatSerializer.a("{\"text\": \"§3§lAURORAMC NETWORK         §b§lAURORAMC.NET\",\"color\":\"dark_aqua\",\"bold\":\"false\"}");
+            IChatBaseComponent footer = IChatBaseComponent.ChatSerializer.a("{\"text\": \"\n§fYou are currently connected to §b" + ((player.isDisguised() && player.getPreferences().isHideDisguiseNameEnabled())?"§oHidden":AuroraMCAPI.getServerInfo().getName()) + "\n\n" +
+                    "§rStatus §3§l» §b" + ((player != null && player.isInGame())?player.getGame().getGameState().toString():"Not In Game") + "\n" +
+                    "§rKit §3§l» §b" + ((player != null && player.isInGame()) ? player.getGame().getKit().getName() : "None") + "\n" +
+                    "§rMap §3§l» §b" + ((player != null && player.isInGame()) ? player.getGame().getMap().getName() : "None") + "\n" +
+                    "\",\"color\":\"aqua\",\"bold\":\"false\"}");
 
             PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
             Field ff = packet.getClass().getDeclaredField("a");
@@ -184,6 +191,19 @@ public class LobbyListener implements Listener {
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractAtEntityEvent e) {
+        if (e.getPlayer().getItemInHand() == null || e.getPlayer().getItemInHand().getType() == Material.AIR) {
+            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+            if (e.getRightClicked() instanceof Player && !player.isInGame() && !player.isVanished() && !AuroraMCAPI.getPlayer((Player) e.getRightClicked()).isVanished()) {
+                KitSelection selection = new KitSelection(player, ((AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getRightClicked())));
+                selection.open(player);
+                AuroraMCAPI.openGUI(player, selection);
+                e.setCancelled(true);
             }
         }
     }

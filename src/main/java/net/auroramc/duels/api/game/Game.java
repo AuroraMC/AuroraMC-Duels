@@ -14,8 +14,10 @@ import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.DuelsMap;
 import net.auroramc.duels.api.util.VoidGenerator;
+import net.auroramc.duels.listeners.LobbyListener;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -158,6 +160,8 @@ public class Game {
                 }
 
                 gameState = GameState.STARTING;
+                LobbyListener.updateHeaderFooter(player1, (CraftPlayer) player1.getPlayer());
+                LobbyListener.updateHeaderFooter(player2, (CraftPlayer) player2.getPlayer());
                 startingTask = new BukkitRunnable(){
                     int i = 10;
                     @Override
@@ -179,6 +183,8 @@ public class Game {
                             case 0: {
                                 startTimestamp = System.currentTimeMillis();
                                 gameState = GameState.IN_PROGRESS;
+                                LobbyListener.updateHeaderFooter(player1, (CraftPlayer) player1.getPlayer());
+                                LobbyListener.updateHeaderFooter(player2, (CraftPlayer) player2.getPlayer());
                                 player2.getPlayer().playSound(player2.getPlayer().getLocation(), Sound.NOTE_PLING, 100, 2f);
                                 player1.getPlayer().playSound(player1.getPlayer().getLocation(), Sound.NOTE_PLING, 100, 2f);
                                 player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Game", "Fight!"));
@@ -236,13 +242,18 @@ public class Game {
     private void end(AuroraMCDuelsPlayer winner) {
         gameState = GameState.ENDING;
         endTimestamp = System.currentTimeMillis();
+        LobbyListener.updateHeaderFooter(player1, (CraftPlayer) player1.getPlayer());
+        LobbyListener.updateHeaderFooter(player2, (CraftPlayer) player2.getPlayer());
         StringBuilder winnerString = new StringBuilder();
         winnerString.append("§3§l▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆\n");
         winnerString.append(" \n \n");
         winnerString.append("§b§l");
         winnerString.append((winner == null) ? "Nobody" : winner.getPlayer().getName());
-        winnerString.append(" won the duel!");
-        winnerString.append("\n \n \n");
+        winnerString.append(" won the duel!\n");
+        if (winner != null) {
+            winnerString.append("Remaining Hearts: §c").append((Math.round(winner.getPlayer().getHealth() * 10))/10.0).append("❤§r");
+        }
+        winnerString.append(" \n \n");
         winnerString.append("§b§lMap: §r");
         winnerString.append(map.getName());
         winnerString.append(" by ");
@@ -252,13 +263,16 @@ public class Game {
 
         player1.sendTitle((winner == null) ? "Nobody won the duel" : ((player1.equals(winner) && player1.isDisguised() && player1.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the duel!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
         player2.sendTitle((winner == null) ? "Nobody won the duel" : ((player2.equals(winner) && player2.isDisguised() && player2.getPreferences().isHideDisguiseNameEnabled()) ? winner.getName() : winner.getPlayer().getName()) + " won the duel!", "", 10, 160, 10, ChatColor.AQUA, ChatColor.AQUA, true, false);
+
+
         if (player1.equals(winner) && player1.isDisguised() && player1.getPreferences().isHideDisguiseNameEnabled()) {
             String winnerString2 = "§3§l▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆\n" +
                     " \n \n" +
                     "§b§l" +
                     winner.getName() +
                     " won the duel!" +
-                    "\n \n \n" +
+                    "\nRemaining Hearts: §c"  + (Math.round(winner.getPlayer().getHealth() * 10))/10.0 + "❤§r" +
+                    "\n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
                     " by " +
@@ -276,7 +290,8 @@ public class Game {
                     "§b§l" +
                     winner.getName() +
                     " won the duel!" +
-                    "\n \n \n" +
+                    "\nRemaining Hearts: §c"  + (Math.round(winner.getPlayer().getHealth() * 10))/10.0 + "❤§r" +
+                    "\n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
                     " by " +
@@ -393,6 +408,7 @@ public class Game {
             pl.getRewards().apply(true);
             pl.gameOver();
             pl.setGame(null);
+            LobbyListener.updateHeaderFooter(pl, (CraftPlayer) pl.getPlayer());
         }
 
         PlayerScoreboard scoreboard = pl.getScoreboard();
@@ -423,7 +439,23 @@ public class Game {
         return games;
     }
 
-    public static enum GameState {LOADING, STARTING, IN_PROGRESS, ENDING}
+    public static enum GameState {
+        LOADING("Loading"),
+        STARTING("Starting"),
+        IN_PROGRESS("In Progress"),
+        ENDING("Ending");
+
+        private String name;
+
+        GameState(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+    }
 
     public GameState getGameState() {
         return gameState;
