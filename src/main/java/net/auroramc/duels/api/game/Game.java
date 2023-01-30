@@ -290,7 +290,7 @@ public class Game {
                     "§b§l" +
                     winner.getName() +
                     " won the duel!" +
-                    "\nRemaining Hearts: §c"  + (Math.round(winner.getPlayer().getHealth() * 10))/10.0 + "❤§r" +
+                    "\nRemaining Hearts: §c"  + ((Math.round(winner.getPlayer().getHealth() * 10))/10.0)/2.0 + "❤§r" +
                     "\n \n" +
                     "§b§lMap: §r" +
                     map.getName() +
