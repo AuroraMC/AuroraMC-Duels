@@ -327,9 +327,9 @@ public class Game {
                 WinEffect winEffect = (WinEffect) cosmetic;
                 winEffect.onWin(winner);
             }
-            winner.getRewards().addXp("Winner Bonus", 1000);
-            winner.getRewards().addTickets(1000);
-            winner.getRewards().addCrowns(1000);
+            winner.getRewards().addXp("Winner Bonus", 350);
+            winner.getRewards().addTickets(350);
+            winner.getRewards().addCrowns(350);
         }
 
         startEndRunnable();
