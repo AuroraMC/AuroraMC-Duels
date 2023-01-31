@@ -146,6 +146,7 @@ public class AuroraMCDuels extends JavaPlugin {
         DuelsAPI.registerKit(new Archer());
         DuelsAPI.registerKit(new NoDebuff());
         DuelsAPI.registerKit(new BuildUHC());
+        DuelsAPI.registerKit(new Debuff());
 
         AuroraMCAPI.setCosmeticsEnabled(false);
 
