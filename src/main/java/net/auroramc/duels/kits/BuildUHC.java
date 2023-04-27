@@ -51,7 +51,7 @@ public class BuildUHC extends Kit {
     }
 
     public BuildUHC() {
-        super(5, "BuildUHC", "BuildUHC", Material.GOLDEN_APPLE, (short)1, "ALL", -1);
+        super(5, "BuildUHC", "BuildUHC", Material.GOLDEN_APPLE, (short)1, "ALL", 15);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class Debuff extends Kit {
     }
 
     public Debuff() {
-        super(6, "Debuff", "The opposite of NoDebuff", Material.POTION, (short)16420, "ALL", -1);
+        super(6, "Debuff", "The opposite of NoDebuff", Material.POTION, (short)16420, "ALL", 15);
     }
 
     @Override

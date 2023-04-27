@@ -53,7 +53,7 @@ public class NoDebuff extends Kit {
     }
 
     public NoDebuff() {
-        super(3, "NoDebuff", "NoDebuff", Material.POTION, (short)16421, "ALL", -1);
+        super(3, "NoDebuff", "NoDebuff", Material.POTION, (short)16421, "ALL", 15);
     }
 
     @Override

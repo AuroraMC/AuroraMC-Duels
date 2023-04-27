@@ -56,7 +56,7 @@ public class Vanilla extends Kit {
     }
 
     public Vanilla() {
-        super(2, "Vanilla", "The classic vanilla pvp kit with no special effects.", Material.LEATHER, (short)0, "ALL", -1);
+        super(2, "Vanilla", "The classic vanilla pvp kit with no special effects.", Material.LEATHER, (short)0, "ALL", 15);
     }
     @Override
     public void onGameCreate(Game game) {

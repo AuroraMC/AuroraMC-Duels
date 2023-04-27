@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Sumo extends Kit {
 
     public Sumo() {
-        super(4, "Sumo", "Sumo", Material.GOLD_BARDING, (short)0, "SUMO", -1);
+        super(4, "Sumo", "Sumo", Material.GOLD_BARDING, (short)0, "SUMO", 15);
     }
 
     @Override

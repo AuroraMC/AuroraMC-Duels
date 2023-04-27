@@ -55,7 +55,7 @@ public class Archer extends Kit {
     }
 
     public Archer() {
-        super(1, "Archer", "Archer", Material.BOW, (short)0, "ALL", -1);
+        super(1, "Archer", "Archer", Material.BOW, (short)0, "ALL", 15);
     }
 
     @Override
