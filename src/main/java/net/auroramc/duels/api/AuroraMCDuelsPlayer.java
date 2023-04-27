@@ -14,6 +14,8 @@ public class AuroraMCDuelsPlayer extends AuroraMCServerPlayer {
     private Game game;
     private AuroraMCDuelsPlayer lastHitBy;
     private long lastHitAt;
+    private long lastClick;
+    private boolean spectator;
 
     private final Map<AuroraMCDuelsPlayer, Long> latestHits;
     private GameRewards rewards;
@@ -29,15 +31,33 @@ public class AuroraMCDuelsPlayer extends AuroraMCServerPlayer {
         pendingOutgoingInvite = null;
     }
 
+    public void click() {
+        lastClick = System.currentTimeMillis();
+    }
+
+    public boolean canClick() {
+        return System.currentTimeMillis() - lastClick >= 500;
+    }
+
     public Game getGame() {
         return game;
     }
 
     public void setGame(Game game) {
         this.game = game;
+        this.spectator = false;
         if (game != null) {
            rewards = new GameRewards(this);
         }
+    }
+
+    public void spectateGame(Game game) {
+        this.game = game;
+        this.spectator = true;
+    }
+
+    public boolean isSpectator() {
+        return spectator;
     }
 
     public boolean isInGame() {

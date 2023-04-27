@@ -46,7 +46,7 @@ public class Gapple extends Kit {
     }
 
     public Gapple() {
-        super(0, "Gapple", "Gapple", Material.GOLDEN_APPLE, (short)1, "ALL");
+        super(0, "Gapple", "Gapple", Material.GOLDEN_APPLE, (short)1, "ALL", -1);
     }
 
     @Override
@@ -76,5 +76,9 @@ public class Gapple extends Kit {
         player.getInventory().setItem(0, sword);
         player.getInventory().setItem(1, new GUIItem(Material.GOLDEN_APPLE, null, 64, null, (short)1).getItemStack());
         player.getInventory().setItem(2, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItemStack());
+    }
+
+    @Override
+    public void onGameRelease(AuroraMCDuelsPlayer player) {
     }
 }

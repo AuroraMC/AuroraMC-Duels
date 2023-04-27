@@ -31,7 +31,7 @@ public class KitSelection extends GUI {
         int row = 1;
 
         for (Kit kit : DuelsAPI.getRegisteredKits()) {
-            this.setItem(row, column, new GUIItem(kit.getMaterial(), "&3&l" + kit.getName(), 1, ";&7" + WordUtils.wrap(kit.getDescription(), 40, ";&7", false) + ";;&aClick to send invite!"));
+            this.setItem(row, column, new GUIItem(kit.getMaterial(), "&3&l" + kit.getName(), 1, ";&7" + WordUtils.wrap(kit.getDescription(), 40, ";&7", false) + ";;&aClick to send invite!", kit.getData()));
             column++;
             if (column == 8) {
                 row++;

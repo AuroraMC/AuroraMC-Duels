@@ -27,6 +27,9 @@ public class BuildUHCListener implements Listener {
     public void onMove(BlockBreakEvent e) {
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
+            if (player.isSpectator()) {
+                e.setCancelled(true);
+            }
             if (e.getBlock().getType() != Material.COBBLESTONE && e.getBlock().getType() != Material.WOOD) {
                 e.setCancelled(true);
             }
@@ -37,6 +40,9 @@ public class BuildUHCListener implements Listener {
     public void onEat(PlayerInteractEvent e) {
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
+            if (player.isSpectator()) {
+                e.setCancelled(true);
+            }
             if (e.getItem() != null && e.getItem().getType() == Material.SKULL_ITEM) {
                 e.setCancelled(true);
                 if (e.getItem().getAmount() == 1) {

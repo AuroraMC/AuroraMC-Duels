@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Team;
 import org.json.JSONArray;
 
 public class JoinListener implements Listener {
@@ -69,9 +70,7 @@ public class JoinListener implements Listener {
             float yaw = spawnLocations.getJSONObject(0).getFloat("yaw");
             e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, 0));
         }
-        if (DuelsAPI.getLobbyMap().getMapData().getInt("time") > 12000) {
-            e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 0, true, false), false);
-        }
+        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000, 6, true, false), false);
     }
 
     @EventHandler
@@ -81,7 +80,7 @@ public class JoinListener implements Listener {
         if (!player.isVanished()) {
             ServerMessage message = ((ServerMessage) player.getActiveCosmetics().getOrDefault(Cosmetic.CosmeticType.SERVER_MESSAGE, AuroraMCAPI.getCosmetics().get(400)));
             for (AuroraMCServerPlayer player1 : ServerAPI.getPlayers()) {
-                player1.sendMessage(TextFormatter.pluginMessage("Join", message.onJoin(player1, player)));
+                player1.sendMessage(TextFormatter.pluginMessage("Join", TextFormatter.convert(message.onJoin(player1, player))));
             }
         }
         PlayerScoreboard scoreboard = player.getScoreboard();
@@ -102,6 +101,10 @@ public class JoinListener implements Listener {
         scoreboard.setLine(2, "    ");
         scoreboard.setLine(1, "&7auroramc.net");
 
+        Team team = scoreboard.getScoreboard().registerNewTeam("cly");
+        team.setPrefix("§4§lCaptain§r ");
+        team.addEntry("§c§lCalypso");
+
         player.getInventory().setItem(8, DuelsAPI.getLobbyItem().getItemStack());
         player.getInventory().setItem(7, DuelsAPI.getPrefsItem().getItemStack());
         player.getInventory().setItem(4, DuelsAPI.getCosmeticsItem().getItemStack());
@@ -119,7 +122,7 @@ public class JoinListener implements Listener {
         if (!e.getPlayer().isVanished()) {
             ServerMessage message = ((ServerMessage)e.getPlayer().getActiveCosmetics().getOrDefault(Cosmetic.CosmeticType.SERVER_MESSAGE, AuroraMCAPI.getCosmetics().get(400)));
             for (AuroraMCServerPlayer player1 : ServerAPI.getPlayers()) {
-                player1.sendMessage(TextFormatter.pluginMessage("Leave", message.onLeave(player1, e.getPlayer())));
+                player1.sendMessage(TextFormatter.pluginMessage("Leave", TextFormatter.convert(message.onLeave(player1, e.getPlayer()))));
             }
         }
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
@@ -132,6 +135,8 @@ public class JoinListener implements Listener {
                     player.getStats().incrementStatistic(4, "gamesPlayed", 1, true);
                 }
             }
+        } else if (player.isInGame() && player.isSpectator()) {
+            player.getGame().onLeave(player);
         }
     }
 

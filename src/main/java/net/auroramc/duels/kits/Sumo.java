@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Sumo extends Kit {
 
     public Sumo() {
-        super(4, "Sumo", "Sumo", Material.GOLD_BARDING, (short)0, "SUMO");
+        super(4, "Sumo", "Sumo", Material.GOLD_BARDING, (short)0, "SUMO", -1);
     }
 
     @Override
@@ -41,5 +41,9 @@ public class Sumo extends Kit {
 
     @Override
     public void onGameStart(AuroraMCDuelsPlayer player) {
+    }
+
+    @Override
+    public void onGameRelease(AuroraMCDuelsPlayer player) {
     }
 }

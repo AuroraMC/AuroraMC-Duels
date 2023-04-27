@@ -41,6 +41,10 @@ public class StandardDeathListener implements Listener {
     public void onDamage(PlayerDamageEvent e) {
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
+            if (player.isSpectator()) {
+                e.setCancelled(true);
+                return;
+            }
             if (e.getDamage() >= e.getPlayer().getHealth()) {
                 e.setDamage(0);
 

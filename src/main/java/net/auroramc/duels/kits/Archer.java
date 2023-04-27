@@ -55,7 +55,7 @@ public class Archer extends Kit {
     }
 
     public Archer() {
-        super(1, "Archer", "Archer", Material.BOW, (short)0, "ALL");
+        super(1, "Archer", "Archer", Material.BOW, (short)0, "ALL", -1);
     }
 
     @Override
@@ -77,13 +77,21 @@ public class Archer extends Kit {
     }
 
     @Override
+    public void onGameRelease(AuroraMCDuelsPlayer player) {
+        if (player.getInventory().getItem(9) == null || player.getInventory().getItem(9).getType() == Material.AIR) {
+            player.getInventory().setItem(9, new GUIItem(Material.ARROW, null, 1, null, (short)0).getItemStack());
+        } else {
+            player.getInventory().addItem(new GUIItem(Material.ARROW, null, 1, null, (short)0).getItemStack());
+        }
+    }
+
+    @Override
     public void onGameStart(AuroraMCDuelsPlayer player) {
         player.getInventory().setHelmet(helmet);
         player.getInventory().setChestplate(chestplate);
         player.getInventory().setLeggings(leggings);
         player.getInventory().setBoots(boots);
         player.getInventory().setItem(0, bow);
-        player.getInventory().setItem(1, new GUIItem(Material.ARROW, null, 1, null, (short)0).getItemStack());
         player.getInventory().setItem(7, new GUIItem(Material.ENDER_PEARL, null, 3, null, (short)0).getItemStack());
         player.getInventory().setItem(8, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItemStack());
     }

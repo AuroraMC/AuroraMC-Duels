@@ -1,6 +1,9 @@
 package net.auroramc.duels;
 
 import net.auroramc.api.AuroraMCAPI;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerAPI;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
 import net.auroramc.core.api.utils.ZipUtil;
 import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.DuelsMap;
@@ -8,6 +11,7 @@ import net.auroramc.duels.api.backend.DuelsDatabaseManager;
 import net.auroramc.duels.api.game.MapRegistry;
 import net.auroramc.duels.commands.CommandDisguiseOverride;
 import net.auroramc.duels.commands.CommandHub;
+import net.auroramc.duels.commands.CommandSpectate;
 import net.auroramc.duels.commands.CommandUndisguiseOverride;
 import net.auroramc.duels.commands.admin.CommandEffect;
 import net.auroramc.duels.commands.admin.CommandGameMode;
@@ -19,6 +23,7 @@ import net.auroramc.duels.listeners.*;
 import net.auroramc.duels.utils.damage.NoDamageListener;
 import net.auroramc.duels.utils.damage.StandardDeathListener;
 import net.auroramc.duels.utils.settings.*;
+import net.md_5.bungee.api.chat.*;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,8 +35,21 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class AuroraMCDuels extends JavaPlugin {
+
+    private static final List<String> tips;
+
+    static {
+        tips = new ArrayList<>();
+
+        tips.add("Did you know you can spectate duels? If a player is in a duel, simply do **/spectate [player]** to spectate their game!");
+        tips.add("To duel a player, either right-click on them in the Lobby, or use **/duel [player]**!");
+        tips.add("We have a variety of different kits available to play, why not try some of them out!");
+    }
 
     @Override
     public void onEnable() {
@@ -100,7 +118,7 @@ public class AuroraMCDuels extends JavaPlugin {
 
         getLogger().info("Maps loaded. Copying waiting lobby...");
         if (DuelsAPI.getMaps().containsKey("WAITING_LOBBY")) {
-            DuelsMap map = DuelsAPI.getMaps().get("WAITING_LOBBY").getMaps().get(0);
+            DuelsMap map = DuelsAPI.getMaps().get("WAITING_LOBBY").getMap("AuroraMCDuelsLobby");
             DuelsAPI.setLobbyMap(map);
             try {
                 File file = new File(Bukkit.getWorldContainer(), "world/region");
@@ -129,6 +147,7 @@ public class AuroraMCDuels extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableDropListener(), this);
         Bukkit.getPluginManager().registerEvents(new ShutdownRequestListener(), this);
         Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
+        Bukkit.getPluginManager().registerEvents(new FakePlayerListener(), this);
 
         AuroraMCAPI.registerCommand(new CommandHub());
         AuroraMCAPI.registerCommand(new CommandDuel());
@@ -138,6 +157,7 @@ public class AuroraMCDuels extends JavaPlugin {
         AuroraMCAPI.registerCommand(new CommandEffect());
         AuroraMCAPI.registerCommand(new CommandGive());
         AuroraMCAPI.registerCommand(new CommandMob());
+        AuroraMCAPI.registerCommand(new CommandSpectate());
 
 
         DuelsAPI.registerKit(new Gapple());
@@ -146,6 +166,7 @@ public class AuroraMCDuels extends JavaPlugin {
         DuelsAPI.registerKit(new Archer());
         DuelsAPI.registerKit(new NoDebuff());
         DuelsAPI.registerKit(new BuildUHC());
+        DuelsAPI.registerKit(new Debuff());
 
         AuroraMCAPI.setCosmeticsEnabled(false);
 
@@ -155,6 +176,20 @@ public class AuroraMCDuels extends JavaPlugin {
                 DuelsDatabaseManager.updateServerData();
             }
         }.runTaskTimerAsynchronously(this, 0, 20);
+
+        new BukkitRunnable(){
+            Random random = new Random();
+            @Override
+            public void run() {
+                BaseComponent component = TextFormatter.pluginMessage("Tip", tips.get(random.nextInt(tips.size())));
+
+                for (AuroraMCServerPlayer player : ServerAPI.getPlayers()) {
+                    if (player.getLinkedDiscord() == null) {
+                        player.sendMessage(component);
+                    }
+                }
+            }
+        }.runTaskTimerAsynchronously(DuelsAPI.getDuels(), 36000, 36000);
     }
 
     @Override
@@ -162,3 +197,4 @@ public class AuroraMCDuels extends JavaPlugin {
 
     }
 }
+

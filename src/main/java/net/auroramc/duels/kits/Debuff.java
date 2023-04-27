@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
-public class NoDebuff extends Kit {
+public class Debuff extends Kit {
 
     private static final ItemStack helmet;
     private static final ItemStack chestplate;
@@ -26,34 +26,42 @@ public class NoDebuff extends Kit {
     private static final ItemStack sword;
     private static final ItemStack speed;
     private static final ItemStack health;
+    private static final ItemStack damage;
+    private static final ItemStack poison;
+    private static final ItemStack weakness;
 
     static {
         helmet = new ItemStack(Material.DIAMOND_HELMET);
         helmet.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         helmet.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+
         chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
         chestplate.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+
         leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
         leggings.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         leggings.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+
         boots = new ItemStack(Material.DIAMOND_BOOTS);
         boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         boots.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+
         sword = new ItemStack(Material.DIAMOND_SWORD);
         sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
         ItemMeta meta = sword.getItemMeta();
         meta.spigot().setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        sword.setItemMeta(meta);
 
         speed = new Potion(PotionType.SPEED, 1).toItemStack(1);
-
         health = new Potion(PotionType.INSTANT_HEAL, 2).splash().toItemStack(1);
+        damage = new Potion(PotionType.INSTANT_DAMAGE, 2).splash().toItemStack(1);
+        poison = new Potion(PotionType.POISON, 2).splash().toItemStack(1);
+        weakness = new Potion(PotionType.WEAKNESS, 2).splash().toItemStack(1);
     }
 
-    public NoDebuff() {
-        super(3, "NoDebuff", "NoDebuff", Material.POTION, (short)16421, "ALL", -1);
+    public Debuff() {
+        super(6, "Debuff", "The opposite of NoDebuff", Material.POTION, (short)16420, "ALL", -1);
     }
 
     @Override
@@ -75,6 +83,10 @@ public class NoDebuff extends Kit {
     }
 
     @Override
+    public void onGameRelease(AuroraMCDuelsPlayer player) {
+    }
+
+    @Override
     public void onGameStart(AuroraMCDuelsPlayer player) {
         player.getInventory().setHelmet(helmet);
         player.getInventory().setChestplate(chestplate);
@@ -83,14 +95,15 @@ public class NoDebuff extends Kit {
         player.getInventory().setItem(0, sword);
         player.getInventory().setItem(1, speed);
         player.getInventory().setItem(2, speed);
-        player.getInventory().setItem(3, speed);
-        player.getInventory().setItem(4, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItemStack());
-        for (int i = 5;i < 36;i++) {
+        player.getInventory().setItem(3, damage);
+        player.getInventory().setItem(4, poison);
+        player.getInventory().setItem(5, poison);
+        player.getInventory().setItem(6, weakness);
+        player.getInventory().setItem(7, weakness);
+        player.getInventory().setItem(8, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItemStack());
+
+        for (int i = 9;i < 36;i++) {
             player.getInventory().setItem(i, health);
         }
-    }
-
-    @Override
-    public void onGameRelease(AuroraMCDuelsPlayer player) {
     }
 }
