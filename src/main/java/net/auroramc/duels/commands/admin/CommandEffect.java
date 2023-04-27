@@ -1,9 +1,10 @@
 package net.auroramc.duels.commands.admin;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.command.Command;
-import net.auroramc.core.api.permissions.Permission;
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerAPI;
+import net.auroramc.core.api.ServerCommand;
+import net.auroramc.api.permissions.Permission;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -13,14 +14,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandEffect extends Command {
+public class CommandEffect extends ServerCommand {
 
     public CommandEffect() {
         super("effect", Collections.emptyList(), Collections.singletonList(Permission.ADMIN), false, null);
     }
 
     @Override
-    public void execute(AuroraMCPlayer player, String aliasUsed, List<String> args) {
+    public void execute(AuroraMCServerPlayer player, String aliasUsed, List<String> args) {
         if (args.size() >= 2) {
             String target = args.remove(0);
             String effect = args.remove(0);
@@ -42,12 +43,12 @@ public class CommandEffect extends Command {
             }
 
             if (matches.size() == 0 && type == null) {
-                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "No matches were found for potion effect **" + effect + "**."));
+                player.sendMessage(TextFormatter.pluginMessage("Effect", "No matches were found for potion effect **" + effect + "**."));
                 return;
             }
 
             if (matches.size() > 1 && type == null) {
-                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "Multiple possible matches found for potion effect **" + effect + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
+                player.sendMessage(TextFormatter.pluginMessage("Effect", "Multiple possible matches found for potion effect **" + effect + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
                 return;
             }
 
@@ -61,11 +62,11 @@ public class CommandEffect extends Command {
                 try {
                     multiplier = Integer.parseInt(args.remove(0));
                     if (multiplier < 0 || multiplier > 255) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
+                        player.sendMessage(TextFormatter.pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
                         return;
                     }
                 } catch (NumberFormatException e) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
+                    player.sendMessage(TextFormatter.pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
                     return;
                 }
             }
@@ -73,47 +74,47 @@ public class CommandEffect extends Command {
                 try {
                     duration = Integer.parseInt(args.remove(0));
                     if (duration < 1) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
+                        player.sendMessage(TextFormatter.pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
                         return;
                     }
                 } catch (NumberFormatException e) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
+                    player.sendMessage(TextFormatter.pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
                     return;
                 }
             }
 
             if (target.equalsIgnoreCase("all")) {
-                for (AuroraMCPlayer player1 : AuroraMCAPI.getPlayers()) {
-                    player1.getPlayer().addPotionEffect(new PotionEffect(type, duration*20, multiplier));
-                    player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "You were given effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + "** seconds by **" + player.getPlayer().getName() + "**."));
+                for (AuroraMCServerPlayer player1 : ServerAPI.getPlayers()) {
+                    player1.addPotionEffect(new PotionEffect(type, duration*20, multiplier));
+                    player1.sendMessage(TextFormatter.pluginMessage("Effect", "You were given effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + "** seconds by **" + player.getName() + "**."));
                 }
-                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "You gave effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + " seconds** to **" + AuroraMCAPI.getPlayers().size() + "** players."));
+                player.sendMessage(TextFormatter.pluginMessage("Effect", "You gave effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + " seconds** to **" + ServerAPI.getPlayers().size() + "** players."));
             } else {
                 String[] targets = target.split(",");
                 int players = 0;
                 for (String target1 : targets) {
-                    AuroraMCPlayer player1 = AuroraMCAPI.getPlayer(target1);
+                    AuroraMCServerPlayer player1 = ServerAPI.getPlayer(target1);
                     if (player1 != null) {
-                        player1.getPlayer().addPotionEffect(new PotionEffect(type, duration*20, multiplier));
+                        player1.addPotionEffect(new PotionEffect(type, duration*20, multiplier));
                         players++;
-                        player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "You were given effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + "** seconds by **" + player.getPlayer().getName() + "**."));
+                        player1.sendMessage(TextFormatter.pluginMessage("Effect", "You were given effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + "** seconds by **" + player.getName() + "**."));
                     } else {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "Target **" + target1 + "** not found."));
+                        player.sendMessage(TextFormatter.pluginMessage("Give", "Target **" + target1 + "** not found."));
                     }
                 }
                 if (players == 0) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "No targets were found, so nothing was given out."));
+                    player.sendMessage(TextFormatter.pluginMessage("Give", "No targets were found, so nothing was given out."));
                 } else {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "You gave effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + " seconds** to **" + players + "** players."));
+                    player.sendMessage(TextFormatter.pluginMessage("Effect", "You gave effect **" + WordUtils.capitalizeFully(type.getName().replace("_", " ")) + " " + multiplier + "** for **" + duration + " seconds** to **" + players + "** players."));
                 }
             }
         } else {
-            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
+            player.sendMessage(TextFormatter.pluginMessage("Effect", "Invalid syntax. Correct syntax: **/effect <player|all> <effect> [amplifier] [duration]**"));
         }
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(AuroraMCPlayer auroraMCPlayer, String s, List<String> list, String s1, int i) {
+    public @NotNull List<String> onTabComplete(AuroraMCServerPlayer auroraMCPlayer, String s, List<String> list, String s1, int i) {
         return new ArrayList<>();
     }
 

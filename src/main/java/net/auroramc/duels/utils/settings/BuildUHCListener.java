@@ -1,14 +1,12 @@
 package net.auroramc.duels.utils.settings;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.core.api.events.block.BlockBreakEvent;
+import net.auroramc.core.api.events.player.PlayerInteractEvent;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -27,7 +25,7 @@ public class BuildUHCListener implements Listener {
 
     @EventHandler
     public void onMove(BlockBreakEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
             if (e.getBlock().getType() != Material.COBBLESTONE && e.getBlock().getType() != Material.WOOD) {
                 e.setCancelled(true);
@@ -37,7 +35,7 @@ public class BuildUHCListener implements Listener {
 
     @EventHandler
     public void onEat(PlayerInteractEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
             if (e.getItem() != null && e.getItem().getType() == Material.SKULL_ITEM) {
                 e.setCancelled(true);

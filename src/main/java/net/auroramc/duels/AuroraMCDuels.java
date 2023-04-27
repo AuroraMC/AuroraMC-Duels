@@ -1,6 +1,6 @@
 package net.auroramc.duels;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.api.AuroraMCAPI;
 import net.auroramc.core.api.utils.ZipUtil;
 import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.DuelsMap;

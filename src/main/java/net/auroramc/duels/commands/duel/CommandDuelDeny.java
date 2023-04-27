@@ -1,9 +1,9 @@
 package net.auroramc.duels.commands.duel;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.command.Command;
-import net.auroramc.core.api.permissions.Permission;
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerCommand;
+import net.auroramc.api.permissions.Permission;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.DuelInvite;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandDuelDeny extends Command {
+public class CommandDuelDeny extends ServerCommand {
 
 
     public CommandDuelDeny() {
@@ -20,22 +20,22 @@ public class CommandDuelDeny extends Command {
     }
 
     @Override
-    public void execute(AuroraMCPlayer player, String aliasUsed, List<String> args) {
+    public void execute(AuroraMCServerPlayer player, String aliasUsed, List<String> args) {
         if (args.size() == 1) {
             for (DuelInvite invite : ((AuroraMCDuelsPlayer)player).getPendingIncomingInvites().values()) {
-                if (invite.getInviter().getPlayer().getName().equalsIgnoreCase(args.get(0))) {
+                if (invite.getInviter().getName().equalsIgnoreCase(args.get(0))) {
                     invite.reject();
                     return;
                 }
             }
-            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "You do not have a pending invite from that player."));
+            player.sendMessage(TextFormatter.pluginMessage("Duels", "You do not have a pending invite from that player."));
         } else {
-            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "Invalid syntax. Correct syntax: **/duel deny [player]**"));
+            player.sendMessage(TextFormatter.pluginMessage("Duels", "Invalid syntax. Correct syntax: **/duel deny [player]**"));
         }
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(AuroraMCPlayer pla, String s, List<String> list, String s1, int i) {
+    public @NotNull List<String> onTabComplete(AuroraMCServerPlayer pla, String s, List<String> list, String s1, int i) {
         return new ArrayList<>();
     }
 }

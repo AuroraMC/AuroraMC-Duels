@@ -1,22 +1,20 @@
 package net.auroramc.duels.listeners;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.core.api.events.player.PlayerMoveEvent;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.json.JSONObject;
 
 public class DisableMoveListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        if (AuroraMCAPI.getPlayer(e.getPlayer()) instanceof AuroraMCDuelsPlayer) {
-            AuroraMCDuelsPlayer duelsPlayer = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        if (e.getPlayer() instanceof AuroraMCDuelsPlayer) {
+            AuroraMCDuelsPlayer duelsPlayer = (AuroraMCDuelsPlayer) e.getPlayer();
             if (duelsPlayer.isInGame() && duelsPlayer.getGame().getGameState() == Game.GameState.STARTING) {
                 if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
                     e.setTo(e.getFrom());
@@ -28,8 +26,7 @@ public class DisableMoveListener implements Listener {
     @EventHandler
     public void onBorder(PlayerMoveEvent e) {
         if (!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
-            AuroraMCPlayer player = AuroraMCAPI.getPlayer(e.getPlayer());
-            AuroraMCDuelsPlayer dp = (AuroraMCDuelsPlayer) player;
+            AuroraMCDuelsPlayer dp = (AuroraMCDuelsPlayer) e.getPlayer();
             if (dp.isInGame() && dp.getGame().getGameState() == Game.GameState.IN_PROGRESS) {
                 int highX = 0, lowX = 0, highY = 0, lowY = 0, highZ = 0, lowZ = 0;
                 JSONObject a = dp.getGame().getMap().getMapData().getJSONObject("border_a");
@@ -60,7 +57,7 @@ public class DisableMoveListener implements Listener {
 
                 if (e.getTo().getX() < lowX || e.getTo().getX() > highX || e.getTo().getY() < lowY || e.getTo().getY() > highY || e.getTo().getZ() < lowZ || e.getTo().getZ() > highZ) {
                     //Call entity damage event so the games can handle them appropriately.
-                    EntityDamageEvent event = new EntityDamageEvent(e.getPlayer(), EntityDamageEvent.DamageCause.VOID, 500);
+                    EntityDamageEvent event = new EntityDamageEvent(e.getPlayer().getCraft(), EntityDamageEvent.DamageCause.VOID, 500);
                     Bukkit.getPluginManager().callEvent(event);
                 }
             }

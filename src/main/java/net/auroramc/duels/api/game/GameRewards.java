@@ -1,9 +1,10 @@
 package net.auroramc.duels.api.game;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.api.utils.TextFormatter;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -100,11 +101,11 @@ public class GameRewards {
 
         if (message) {
             StringBuilder xpBreakdown = new StringBuilder();
-            xpBreakdown.append("&r+");
+            xpBreakdown.append("+");
             xpBreakdown.append(timeXp);
             xpBreakdown.append(" XP **Time Bonus**");
             for (Map.Entry<String, Integer> entry : xp.entrySet()) {
-                xpBreakdown.append("\n&r+");
+                xpBreakdown.append("\n+");
                 xpBreakdown.append(entry.getValue());
                 xpBreakdown.append(" XP **");
                 xpBreakdown.append(entry.getKey());
@@ -127,10 +128,10 @@ public class GameRewards {
 
             TextComponent xp = new TextComponent("+" + totalXp + " XP");
             xp.setColor(ChatColor.GREEN);
-            xp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight(xpBreakdown.toString()))).create()));
+            xp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{TextFormatter.highlight(xpBreakdown.toString())}));
 
             if (DuelsAPI.getXpBoostMessage() != null) {
-                xp.addExtra(" " + AuroraMCAPI.getFormatter().convert(DuelsAPI.getXpBoostMessage()) + "\n");
+                xp.addExtra(" " + TextFormatter.convert(DuelsAPI.getXpBoostMessage()) + "\n");
             } else {
                 xp.addExtra("\n");
             }
@@ -158,7 +159,7 @@ public class GameRewards {
 
             textComponent.addExtra("\n \n");
             textComponent.addExtra(lines);
-            player.getPlayer().spigot().sendMessage(textComponent);
+            player.sendMessage(textComponent);
         }
     }
 

@@ -76,17 +76,17 @@ public class NoDebuff extends Kit {
 
     @Override
     public void onGameStart(AuroraMCDuelsPlayer player) {
-        player.getPlayer().getInventory().setHelmet(helmet);
-        player.getPlayer().getInventory().setChestplate(chestplate);
-        player.getPlayer().getInventory().setLeggings(leggings);
-        player.getPlayer().getInventory().setBoots(boots);
-        player.getPlayer().getInventory().setItem(0, sword);
-        player.getPlayer().getInventory().setItem(1, speed);
-        player.getPlayer().getInventory().setItem(2, speed);
-        player.getPlayer().getInventory().setItem(3, speed);
-        player.getPlayer().getInventory().setItem(4, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItem());
+        player.getInventory().setHelmet(helmet);
+        player.getInventory().setChestplate(chestplate);
+        player.getInventory().setLeggings(leggings);
+        player.getInventory().setBoots(boots);
+        player.getInventory().setItem(0, sword);
+        player.getInventory().setItem(1, speed);
+        player.getInventory().setItem(2, speed);
+        player.getInventory().setItem(3, speed);
+        player.getInventory().setItem(4, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItemStack());
         for (int i = 5;i < 36;i++) {
-            player.getPlayer().getInventory().setItem(i, health);
+            player.getInventory().setItem(i, health);
         }
     }
 }

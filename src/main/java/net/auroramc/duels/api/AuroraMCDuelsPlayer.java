@@ -1,6 +1,6 @@
 package net.auroramc.duels.api;
 
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
 import net.auroramc.duels.api.game.DuelInvite;
 import net.auroramc.duels.api.game.Game;
 import net.auroramc.duels.api.game.GameRewards;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
+public class AuroraMCDuelsPlayer extends AuroraMCServerPlayer {
 
     private Game game;
     private AuroraMCDuelsPlayer lastHitBy;
@@ -21,7 +21,7 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
     private final Map<UUID, DuelInvite> pendingIncomingInvites;
     private DuelInvite pendingOutgoingInvite;
 
-    public AuroraMCDuelsPlayer(AuroraMCPlayer oldPlayer) {
+    public AuroraMCDuelsPlayer(AuroraMCServerPlayer oldPlayer) {
         super(oldPlayer);
         this.game = null;
         latestHits = new HashMap<>();
@@ -89,10 +89,10 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
     }
 
     public void newIncoming(DuelInvite invite) {
-        pendingIncomingInvites.put(invite.getInviter().getPlayer().getUniqueId(), invite);
+        pendingIncomingInvites.put(invite.getInviter().getUniqueId(), invite);
     }
 
     public void removeIncoming(DuelInvite invite) {
-        pendingIncomingInvites.remove(invite.getInviter().getPlayer().getUniqueId());
+        pendingIncomingInvites.remove(invite.getInviter().getUniqueId());
     }
 }

@@ -2,11 +2,20 @@ package net.auroramc.duels.listeners;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.api.AuroraMCAPI;
+import net.auroramc.core.api.ServerAPI;
 import net.auroramc.core.api.events.VanishEvent;
+import net.auroramc.core.api.events.block.BlockBreakEvent;
+import net.auroramc.core.api.events.block.BlockPlaceEvent;
 import net.auroramc.core.api.events.cosmetics.CosmeticEnableEvent;
 import net.auroramc.core.api.events.cosmetics.CosmeticSwitchEvent;
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.core.api.events.entity.FoodLevelChangeEvent;
+import net.auroramc.core.api.events.entity.PlayerDamageEvent;
+import net.auroramc.core.api.events.inventory.InventoryClickEvent;
+import net.auroramc.core.api.events.player.PlayerArmorStandManipulateEvent;
+import net.auroramc.core.api.events.player.PlayerDropItemEvent;
+import net.auroramc.core.api.events.player.PlayerInteractAtEntityEvent;
+import net.auroramc.core.api.events.player.PlayerInteractEvent;
 import net.auroramc.core.gui.cosmetics.Cosmetics;
 import net.auroramc.core.gui.preferences.Preferences;
 import net.auroramc.duels.AuroraMCDuels;
@@ -24,18 +33,10 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
@@ -47,11 +48,11 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (!player.isInGame()) {
             if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
-                if (!AuroraMCAPI.getPlayer(e.getPlayer()).getStats().getAchievementsGained().containsKey(AuroraMCAPI.getAchievement(5))) {
-                    AuroraMCAPI.getPlayer(e.getPlayer()).getStats().achievementGained(AuroraMCAPI.getAchievement(5), 1, true);
+                if (!e.getPlayer().getStats().getAchievementsGained().containsKey(AuroraMCAPI.getAchievement(5))) {
+                    e.getPlayer().getStats().achievementGained(AuroraMCAPI.getAchievement(5), 1, true);
                 }
                 e.setCancelled(true);
             }
@@ -60,7 +61,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (!player.isInGame()) {
             if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                 e.setCancelled(true);
@@ -69,27 +70,31 @@ public class LobbyListener implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player) {
-            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getEntity());
-            if (!player.isInGame()) {
-                if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    JSONArray spawnLocations = DuelsAPI.getLobbyMap().getMapData().getJSONObject("spawn").getJSONArray("PLAYERS");
-                    int x, y, z;
-                    x = spawnLocations.getJSONObject(0).getInt("x");
-                    y = spawnLocations.getJSONObject(0).getInt("y");
-                    z = spawnLocations.getJSONObject(0).getInt("z");
-                    float yaw = spawnLocations.getJSONObject(0).getFloat("yaw");
-                    e.getEntity().teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, 0));
-                    e.getEntity().setFallDistance(0);
-                    e.getEntity().setVelocity(new Vector());
-                } else if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK || e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-                    e.getEntity().setFireTicks(0);
-                }
-                e.setCancelled(true);
+    public void onDamage(PlayerDamageEvent e) {
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
+        if (!player.isInGame()) {
+            if (e.getCause() == PlayerDamageEvent.DamageCause.VOID) {
+                JSONArray spawnLocations = DuelsAPI.getLobbyMap().getMapData().getJSONObject("spawn").getJSONArray("PLAYERS");
+                int x, y, z;
+                x = spawnLocations.getJSONObject(0).getInt("x");
+                y = spawnLocations.getJSONObject(0).getInt("y");
+                z = spawnLocations.getJSONObject(0).getInt("z");
+                float yaw = spawnLocations.getJSONObject(0).getFloat("yaw");
+                e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, 0));
+                e.getPlayer().setFallDistance(0);
+                e.getPlayer().setVelocity(new Vector());
+            } else if (e.getCause() == PlayerDamageEvent.DamageCause.FIRE || e.getCause() == PlayerDamageEvent.DamageCause.FIRE_TICK || e.getCause() == PlayerDamageEvent.DamageCause.LAVA) {
+                e.getPlayer().setFireTicks(0);
             }
+            e.setCancelled(true);
+        }
 
-        } else if (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Painting || e.getEntity() instanceof ItemFrame) {
+
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent e) {
+        if (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Painting || e.getEntity() instanceof ItemFrame) {
             e.setCancelled(true);
         }
     }
@@ -108,11 +113,11 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onHunger(FoodLevelChangeEvent e) {
-        if (e.getEntity() instanceof Player && e.getFoodLevel() < 25) {
-            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getEntity());
+        if (e.getLevel() < 25) {
+            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
             if (!player.isInGame()) {
                 e.setCancelled(true);
-                e.setFoodLevel(30);
+                e.setLevel(30);
             }
 
         }
@@ -138,7 +143,7 @@ public class LobbyListener implements Listener {
     public static void updateHeaderFooter(AuroraMCDuelsPlayer player, CraftPlayer player2) {
         try {
             IChatBaseComponent header = IChatBaseComponent.ChatSerializer.a("{\"text\": \"§3§lAURORAMC NETWORK         §b§lAURORAMC.NET\",\"color\":\"dark_aqua\",\"bold\":\"false\"}");
-            IChatBaseComponent footer = IChatBaseComponent.ChatSerializer.a("{\"text\": \"\n§fYou are currently connected to §b" + ((player.isDisguised() && player.getPreferences().isHideDisguiseNameEnabled())?"§oHidden":AuroraMCAPI.getServerInfo().getName()) + "\n\n" +
+            IChatBaseComponent footer = IChatBaseComponent.ChatSerializer.a("{\"text\": \"\n§fYou are currently connected to §b" + ((player.isDisguised() && player.getPreferences().isHideDisguiseNameEnabled())?"§oHidden":AuroraMCAPI.getInfo().getName()) + "\n\n" +
                     "§rStatus §3§l» §b" + ((player != null && player.isInGame())?player.getGame().getGameState().toString():"Not In Game") + "\n" +
                     "§rKit §3§l» §b" + ((player != null && player.isInGame()) ? player.getGame().getKit().getName() : "None") + "\n" +
                     "§rMap §3§l» §b" + ((player != null && player.isInGame()) ? player.getGame().getMap().getName() : "None") + "\n" +
@@ -161,7 +166,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onItemClick(PlayerInteractEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (!player.isInGame()) {
             if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                 e.setCancelled(true);
@@ -172,7 +177,6 @@ public class LobbyListener implements Listener {
                         e.setCancelled(true);
                         Cosmetics cosmetics = new Cosmetics(player);
                         cosmetics.open(player);
-                        AuroraMCAPI.openGUI(player, cosmetics);
                         break;
                     }
                     case WOOD_DOOR: {
@@ -180,14 +184,13 @@ public class LobbyListener implements Listener {
                         ByteArrayDataOutput out = ByteStreams.newDataOutput();
                         out.writeUTF("Lobby");
                         out.writeUTF(e.getPlayer().getUniqueId().toString());
-                        e.getPlayer().sendPluginMessage(AuroraMCAPI.getCore(), "BungeeCord", out.toByteArray());
+                        e.getPlayer().sendPluginMessage(out.toByteArray());
                         break;
                     }
                     case REDSTONE_COMPARATOR: {
                         e.setCancelled(true);
                         Preferences prefs = new Preferences(player);
                         prefs.open(player);
-                        AuroraMCAPI.openGUI(player, prefs);
                         break;
                     }
                 }
@@ -198,11 +201,10 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractAtEntityEvent e) {
         if (e.getPlayer().getItemInHand() == null || e.getPlayer().getItemInHand().getType() == Material.AIR) {
-            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
-            if (e.getRightClicked() instanceof Player && !player.isInGame() && !player.isVanished() && !AuroraMCAPI.getPlayer((Player) e.getRightClicked()).isVanished()) {
-                KitSelection selection = new KitSelection(player, ((AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getRightClicked())));
+            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
+            if (e.getClickedEntity() instanceof Player && !player.isInGame() && !player.isVanished() && !ServerAPI.getPlayer((Player) e.getClickedEntity()).isVanished()) {
+                KitSelection selection = new KitSelection(player, ((AuroraMCDuelsPlayer) ServerAPI.getPlayer((Player) e.getClickedEntity())));
                 selection.open(player);
-                AuroraMCAPI.openGUI(player, selection);
                 e.setCancelled(true);
             }
         }
@@ -210,7 +212,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (!player.isInGame()) {
             e.setCancelled(true);
         }
@@ -218,9 +220,9 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onInvMove(InventoryClickEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getWhoClicked());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (!player.isInGame()) {
-            if (e.getClickedInventory() instanceof PlayerInventory && e.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
+            if (e.getClickedInventory() instanceof PlayerInventory && e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                 e.setCancelled(true);
             }
         }

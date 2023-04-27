@@ -1,9 +1,10 @@
 package net.auroramc.duels.utils.damage;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.cosmetics.Cosmetic;
-import net.auroramc.core.api.cosmetics.DeathEffect;
-import net.auroramc.core.api.cosmetics.KillMessage;
+import net.auroramc.api.cosmetics.Cosmetic;
+import net.auroramc.api.cosmetics.DeathEffect;
+import net.auroramc.core.api.events.entity.PlayerDamageByPlayerEvent;
+import net.auroramc.core.api.events.entity.PlayerDamageEvent;
+import net.auroramc.core.api.events.player.PlayerMoveEvent;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
 import org.bukkit.Location;
@@ -14,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class NoDamageListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame()) && player.getGame().getGameState() == Game.GameState.IN_PROGRESS) {
 
 
@@ -43,7 +43,7 @@ public class NoDamageListener implements Listener {
                         player.setLastHitAt(-1);
                         player.setLastHitBy(null);
                         player.getLatestHits().clear();
-                        player.getPlayer().setFireTicks(0);
+                        player.setFireTicks(0);
 
                         if (player.getActiveCosmetics().containsKey(Cosmetic.CosmeticType.DEATH_EFFECT)) {
                             ((DeathEffect) player.getActiveCosmetics().get(Cosmetic.CosmeticType.DEATH_EFFECT)).onDeath(player);
@@ -60,19 +60,17 @@ public class NoDamageListener implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player) {
-            AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getEntity());
-            if (player.isInGame() && games.contains(player.getGame()))  {
-                e.setDamage(0);
-                if (e instanceof EntityDamageByEntityEvent) {
-                    AuroraMCDuelsPlayer player1 = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) ((EntityDamageByEntityEvent) e).getDamager());
-                    long time = System.currentTimeMillis();
-                    player.setLastHitBy(player1);
-                    player.setLastHitAt(time);
-                    player.getLatestHits().put(player1, time);
-                    player1.getStats().incrementStatistic(4, "damageDealt", Math.round(e.getFinalDamage() * 100), true);
-                }
+    public void onDamage(PlayerDamageEvent e) {
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
+        if (player.isInGame() && games.contains(player.getGame())) {
+            e.setDamage(0);
+            if (e instanceof PlayerDamageByPlayerEvent) {
+                AuroraMCDuelsPlayer player1 = (AuroraMCDuelsPlayer) ((PlayerDamageByPlayerEvent) e).getDamager();
+                long time = System.currentTimeMillis();
+                player.setLastHitBy(player1);
+                player.setLastHitAt(time);
+                player.getLatestHits().put(player1, time);
+                player1.getStats().incrementStatistic(4, "damageDealt", Math.round(e.getDamage() * 100), true);
             }
         }
     }

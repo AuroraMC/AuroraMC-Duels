@@ -1,9 +1,10 @@
 package net.auroramc.duels.commands.admin;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.command.Command;
-import net.auroramc.core.api.permissions.Permission;
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerAPI;
+import net.auroramc.core.api.ServerCommand;
+import net.auroramc.api.permissions.Permission;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -13,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class CommandGive extends Command {
+public class CommandGive extends ServerCommand {
 
     public CommandGive() {
         super("give", Collections.emptyList(), Collections.singletonList(Permission.ADMIN), false, null);
     }
 
     @Override
-    public void execute(AuroraMCPlayer player, String aliasUsed, List<String> args) {
+    public void execute(AuroraMCServerPlayer player, String aliasUsed, List<String> args) {
         if (args.size() >= 2) {
             String target = args.remove(0);
             String[] items = args.remove(0).split(",");
@@ -44,12 +45,12 @@ public class CommandGive extends Command {
                 }
 
                 if (matches.size() == 0) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "No matches were found for material **" + item + "**."));
+                    player.sendMessage(TextFormatter.pluginMessage("Give", "No matches were found for material **" + item + "**."));
                     continue;
                 }
 
                 if (matches.size() > 1) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "Multiple possible matches found for material **" + item + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
+                    player.sendMessage(TextFormatter.pluginMessage("Give", "Multiple possible matches found for material **" + item + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
                     continue;
                 }
 
@@ -57,7 +58,7 @@ public class CommandGive extends Command {
             }
 
             if (materials.size() == 0) {
-                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "No items provided were valid."));
+                player.sendMessage(TextFormatter.pluginMessage("Give", "No items provided were valid."));
                 return;
             }
 
@@ -69,17 +70,17 @@ public class CommandGive extends Command {
                 try {
                     amount = Integer.parseInt(args.remove(0));
                     if (amount < 1) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "Invalid syntax. Correct syntax: **/give <player|all> <item> [amount] [name] [enchantments...]**"));
+                        player.sendMessage(TextFormatter.pluginMessage("Give", "Invalid syntax. Correct syntax: **/give <player|all> <item> [amount] [name] [enchantments...]**"));
                         return;
                     }
                 } catch (NumberFormatException e) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "Invalid syntax. Correct syntax: **/give <player|all> <item> [amount] [name] [enchantments...]**"));
+                    player.sendMessage(TextFormatter.pluginMessage("Give", "Invalid syntax. Correct syntax: **/give <player|all> <item> [amount] [name] [enchantments...]**"));
                     return;
                 }
             }
 
             if (args.size() >= 1) {
-                name = AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight(args.remove(0).replace("_"," ")));
+                name = TextFormatter.convert(TextFormatter.highlightRaw(args.remove(0).replace("_"," ")));
             }
 
             if (args.size() >= 1) {
@@ -89,22 +90,22 @@ public class CommandGive extends Command {
                         Enchantment enchantment = Enchantment.getByName(ench[0].toUpperCase());
                         int level;
                         if (enchantment == null) {
-                            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "No matches for enchantment **" + ench[0] + "**."));
+                            player.sendMessage(TextFormatter.pluginMessage("Give", "No matches for enchantment **" + ench[0] + "**."));
                             return;
                         }
                         try {
                             level = Integer.parseInt(ench[1]);
                             if (level < 1) {
-                                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "An enchantment was not in a valid format. Please format enchantments as: **enchantment:level**"));
+                                player.sendMessage(TextFormatter.pluginMessage("Give", "An enchantment was not in a valid format. Please format enchantments as: **enchantment:level**"));
                                 return;
                             }
                         } catch (NumberFormatException e) {
-                            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "An enchantment was not in a valid format. Please format enchantments as: **enchantment:level**"));
+                            player.sendMessage(TextFormatter.pluginMessage("Give", "An enchantment was not in a valid format. Please format enchantments as: **enchantment:level**"));
                             return;
                         }
                         enchantments.put(enchantment, level);
                     } else {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "An enchantment was not in a valid format. Please format enchantments as: **enchantment:level**"));
+                        player.sendMessage(TextFormatter.pluginMessage("Give", "An enchantment was not in a valid format. Please format enchantments as: **enchantment:level**"));
                         return;
                     }
                 }
@@ -138,45 +139,45 @@ public class CommandGive extends Command {
 
 
             if (target.equalsIgnoreCase("all")) {
-                for (AuroraMCPlayer player1 : AuroraMCAPI.getPlayers()) {
-                    player1.getPlayer().getInventory().addItem(is);
+                for (AuroraMCServerPlayer player1 : ServerAPI.getPlayers()) {
+                    player1.getInventory().addItem(is);
                     for (Material material : materials) {
-                        player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "You were given **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** by **" + player.getPlayer().getName() + "**."));
+                        player1.sendMessage(TextFormatter.pluginMessage("Give", "You were given **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** by **" + player.getName() + "**."));
                     }
                 }
                 for (Material material : materials) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "You gave **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** to **" + AuroraMCAPI.getPlayers().size() + "** players."));
+                    player.sendMessage(TextFormatter.pluginMessage("Give", "You gave **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** to **" + ServerAPI.getPlayers().size() + "** players."));
                 }
             } else {
                 String[] targets = target.split(",");
                 int players = 0;
                 for (String target1 : targets) {
-                    AuroraMCPlayer player1 = AuroraMCAPI.getPlayer(target1);
+                    AuroraMCServerPlayer player1 = ServerAPI.getPlayer(target1);
                     if (player1 != null) {
-                        player1.getPlayer().getInventory().addItem(is);
+                        player1.getInventory().addItem(is);
                         players++;
                         for (Material material : materials) {
-                            player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "You were given **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** by **" + player.getPlayer().getName() + "**."));
+                            player1.sendMessage(TextFormatter.pluginMessage("Give", "You were given **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** by **" + player.getName() + "**."));
                         }
                     } else {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "Target **" + target1 + "** not found."));
+                        player.sendMessage(TextFormatter.pluginMessage("Give", "Target **" + target1 + "** not found."));
                     }
                 }
                 if (players == 0) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "No targets were found, so nothing was given out."));
+                    player.sendMessage(TextFormatter.pluginMessage("Give", "No targets were found, so nothing was given out."));
                 } else {
                     for (Material material : materials) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "You gave **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** to **" + players + "** players."));
+                        player.sendMessage(TextFormatter.pluginMessage("Give", "You gave **" + amount + " " + WordUtils.capitalizeFully(material.name().replace("_", " ")) + ((amount > 1)?"s":"") + "** to **" + players + "** players."));
                     }
                 }
             }
         } else {
-            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Give", "Invalid syntax. Correct syntax: **/give <player|all> <item> [amount] [name] [enchantments...]**"));
+            player.sendMessage(TextFormatter.pluginMessage("Give", "Invalid syntax. Correct syntax: **/give <player|all> <item> [amount] [name] [enchantments...]**"));
         }
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(AuroraMCPlayer auroraMCPlayer, String s, List<String> list, String s1, int i) {
+    public @NotNull List<String> onTabComplete(AuroraMCServerPlayer auroraMCPlayer, String s, List<String> list, String s1, int i) {
         return new ArrayList<>();
     }
 }
