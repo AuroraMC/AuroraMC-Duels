@@ -1,6 +1,7 @@
 package net.auroramc.duels.api.game;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerAPI;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.DuelsMap;
@@ -42,15 +43,15 @@ public class DuelInvite {
 
         textComponent.addExtra(lines);
         textComponent.addExtra("\n\n");
-        textComponent.addExtra(String.format(AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight("You have been invited to duel **%s** with the **%s** kit!")), inviter.getPlayer().getName(), kit.getName()));
+        textComponent.addExtra(TextFormatter.highlight(String.format("You have been invited to duel **%s** with the **%s** kit!", inviter.getName(), kit.getName())));
         textComponent.addExtra("\n\n");
 
         TextComponent accept = new TextComponent("ACCEPT");
         accept.setColor(ChatColor.GREEN);
         accept.setBold(true);
 
-        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(AuroraMCAPI.getFormatter().convert("&aClick here to accept the duel request!")).create()));
-        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/duel accept %s", inviter.getPlayer().getName())));
+        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click here to accept the duel request!").color(ChatColor.GREEN).create()));
+        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/duel accept %s", inviter.getByDisguiseName())));
 
         textComponent.addExtra(accept);
         textComponent.addExtra(" ");
@@ -59,94 +60,94 @@ public class DuelInvite {
         deny.setColor(ChatColor.RED);
         deny.setBold(true);
 
-        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(AuroraMCAPI.getFormatter().convert("&cClick here to deny the duel request!")).create()));
-        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/duel deny %s", inviter.getPlayer().getName())));
+        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click here to deny the duel request!").color(ChatColor.RED).create()));
+        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/duel deny %s", inviter.getByDisguiseName())));
 
         textComponent.addExtra(deny);
         textComponent.addExtra("\n");
-        textComponent.addExtra(AuroraMCAPI.getFormatter().convert("&cWARNING:&r This request will expire in one minute."));
+        textComponent.addExtra(TextFormatter.convert("&cWARNING:&r This request will expire in one minute."));
         textComponent.addExtra("\n\n");
         textComponent.addExtra(lines);
 
 
-        invited.getPlayer().getPlayer().spigot().sendMessage(textComponent);
-        invited.getPlayer().playSound(invited.getPlayer().getLocation(), Sound.NOTE_PLING, 100, 2);
+        invited.sendMessage(textComponent);
+        invited.playSound(invited.getLocation(), Sound.NOTE_PLING, 100, 2);
         invited.newIncoming(this);
 
         textComponent = new TextComponent("");
 
         textComponent.addExtra(lines);
         textComponent.addExtra("\n\n");
-        textComponent.addExtra(String.format(AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight("You have invited **%s** to a duel!")), invited.getPlayer().getName()));
+        textComponent.addExtra(TextFormatter.highlight(String.format("You have invited **%s** to a duel!", invited.getByDisguiseName())));
         textComponent.addExtra("\n\n");
 
         deny = new TextComponent("CANCEL");
         deny.setColor(ChatColor.RED);
         deny.setBold(true);
 
-        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(AuroraMCAPI.getFormatter().convert("&cClick here to cancel your duel request!")).create()));
-        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/duel cancel %s", invited.getPlayer().getName())));
+        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click here to cancel your duel request!").color(ChatColor.RED).create()));
+        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/duel cancel %s", invited.getByDisguiseName())));
 
         textComponent.addExtra(deny);
         textComponent.addExtra("\n\n");
         textComponent.addExtra(lines);
-        inviter.getPlayer().getPlayer().spigot().sendMessage(textComponent);
+        inviter.sendMessage(textComponent);
         inviter.newOutgoing(this);
         task = new BukkitRunnable() {
             @Override
             public void run() {
                 expire();
             }
-        }.runTaskLater(AuroraMCAPI.getCore(), 1200);
+        }.runTaskLater(ServerAPI.getCore(), 1200);
     }
 
     private void expire() {
-        if (invited.getPlayer() != null) {
-            if (invited.getPlayer().isOnline()) {
-                invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** expired.", inviter.getPlayer().getName())));
+        if (invited != null) {
+            if (invited.isOnline()) {
+                invited.sendMessage(TextFormatter.pluginMessage("Duels", String.format("Your duel invite from **%s** expired.", inviter.getByDisguiseName())));
             }
             invited.removeIncoming(this);
         }
         inviter.removeOutgoing();
-        inviter.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite to **%s** expired.", invited.getPlayer().getName())));
+        inviter.sendMessage(TextFormatter.pluginMessage("Duels", String.format("Your duel invite to **%s** expired.", invited.getByDisguiseName())));
     }
 
     public void accept() {
         invited.removeIncoming(this);
         inviter.removeOutgoing();
 
-        if (inviter.getPlayer().isOnline()) {
+        if (inviter.isOnline()) {
             List<DuelsMap> maps = DuelsAPI.getMaps().get("DUELS").getMaps().stream().filter(duelsMap -> duelsMap.getMapData().getString("duel").equalsIgnoreCase(kit.getMapType())).collect(Collectors.toList());
             DuelsMap map = maps.get(new Random().nextInt(maps.size()));
 
             Game game = new Game(invited, inviter, map, kit);
             inviter.setGame(game);
-            LobbyListener.updateHeaderFooter(inviter, (CraftPlayer) inviter.getPlayer());
+            LobbyListener.updateHeaderFooter(inviter, inviter.getCraft());
             invited.setGame(game);
-            LobbyListener.updateHeaderFooter(invited, (CraftPlayer) invited.getPlayer());
+            LobbyListener.updateHeaderFooter(invited, invited.getCraft());
             DuelsAPI.getGames().add(game);
         } else {
-            invited.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "That player is no longer online!"));
+            invited.sendMessage(TextFormatter.pluginMessage("Duels", "That player is no longer online!"));
         }
         this.task.cancel();
     }
 
     public void reject() {
         invited.removeIncoming(this);
-        invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** was rejected.", inviter.getPlayer().getName())));
-        if (inviter.getPlayer().isOnline()) {
+        invited.sendMessage(TextFormatter.pluginMessage("Duels", String.format("Your duel invite from **%s** was rejected.", inviter.getByDisguiseName())));
+        if (inviter.isOnline()) {
             inviter.removeOutgoing();
-            inviter.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite to **%s** was rejected.", invited.getPlayer().getName())));
+            inviter.sendMessage(TextFormatter.pluginMessage("Duels", String.format("Your duel invite to **%s** was rejected.", invited.getByDisguiseName())));
         }
         this.task.cancel();
     }
     public void cancel() {
-        if (invited.getPlayer().isOnline()) {
+        if (invited.isOnline()) {
             invited.removeIncoming(this);
-            invited.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite from **%s** was cancelled.", inviter.getPlayer().getName())));
+            invited.sendMessage(TextFormatter.pluginMessage("Duels", String.format("Your duel invite from **%s** was cancelled.", inviter.getByDisguiseName())));
         }
         inviter.removeOutgoing();
-        inviter.getPlayer().getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", String.format("Your duel invite to **%s** was cancelled.", invited.getPlayer().getName())));
+        inviter.sendMessage(TextFormatter.pluginMessage("Duels", String.format("Your duel invite to **%s** was cancelled.", invited.getByDisguiseName())));
         this.task.cancel();
     }
 

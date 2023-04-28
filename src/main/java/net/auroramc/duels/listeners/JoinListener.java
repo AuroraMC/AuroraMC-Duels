@@ -1,13 +1,16 @@
 package net.auroramc.duels.listeners;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.cosmetics.Cosmetic;
-import net.auroramc.core.api.cosmetics.ServerMessage;
+import net.auroramc.api.AuroraMCAPI;
+import net.auroramc.api.backend.info.ServerInfo;
+import net.auroramc.api.cosmetics.Cosmetic;
+import net.auroramc.api.cosmetics.ServerMessage;
+import net.auroramc.api.permissions.Rank;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerAPI;
 import net.auroramc.core.api.events.player.PlayerLeaveEvent;
 import net.auroramc.core.api.events.player.PlayerObjectCreationEvent;
-import net.auroramc.core.api.permissions.Rank;
-import net.auroramc.core.api.players.AuroraMCPlayer;
-import net.auroramc.core.api.players.scoreboard.PlayerScoreboard;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
+import net.auroramc.core.api.player.scoreboard.PlayerScoreboard;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.game.Game;
@@ -24,6 +27,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Team;
 import org.json.JSONArray;
 
 public class JoinListener implements Listener {
@@ -33,7 +37,7 @@ public class JoinListener implements Listener {
         Rank rank = AuroraMCAPI.getDbManager().getRank(e.getUniqueId());
         boolean isVanished = AuroraMCAPI.getDbManager().isVanished(e.getUniqueId());
         if (!(rank.hasPermission("moderation") && isVanished) && !rank.hasPermission("master")) {
-            if (AuroraMCAPI.getPlayers().stream().filter(player -> !player.isVanished()).count() >= AuroraMCAPI.getServerInfo().getServerType().getInt("max_players") && AuroraMCAPI.getServerInfo().getServerType().has("enforce_limit")) {
+            if (ServerAPI.getPlayers().stream().filter(player -> !player.isVanished()).count() >= ((ServerInfo)AuroraMCAPI.getInfo()).getServerType().getInt("max_players") && ((ServerInfo)AuroraMCAPI.getInfo()).getServerType().has("enforce_limit")) {
                 e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, "This server is currently full. In order to bypass this, you need to purchase a rank!");
             }
         }
@@ -66,9 +70,7 @@ public class JoinListener implements Listener {
             float yaw = spawnLocations.getJSONObject(0).getFloat("yaw");
             e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, 0));
         }
-        if (DuelsAPI.getLobbyMap().getMapData().getInt("time") > 12000) {
-            e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 0, true, false), false);
-        }
+        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 1000000, 6, true, false), false);
     }
 
     @EventHandler
@@ -77,8 +79,8 @@ public class JoinListener implements Listener {
         e.setPlayer(player);
         if (!player.isVanished()) {
             ServerMessage message = ((ServerMessage) player.getActiveCosmetics().getOrDefault(Cosmetic.CosmeticType.SERVER_MESSAGE, AuroraMCAPI.getCosmetics().get(400)));
-            for (AuroraMCPlayer player1 : AuroraMCAPI.getPlayers()) {
-                player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Join", message.onJoin(player1, player)));
+            for (AuroraMCServerPlayer player1 : ServerAPI.getPlayers()) {
+                player1.sendMessage(TextFormatter.pluginMessage("Join", TextFormatter.convert(message.onJoin(player1, player))));
             }
         }
         PlayerScoreboard scoreboard = player.getScoreboard();
@@ -99,11 +101,15 @@ public class JoinListener implements Listener {
         scoreboard.setLine(2, "    ");
         scoreboard.setLine(1, "&7auroramc.net");
 
-        player.getPlayer().getInventory().setItem(8, DuelsAPI.getLobbyItem().getItem());
-        player.getPlayer().getInventory().setItem(7, DuelsAPI.getPrefsItem().getItem());
-        player.getPlayer().getInventory().setItem(4, DuelsAPI.getCosmeticsItem().getItem());
+        Team team = scoreboard.getScoreboard().registerNewTeam("cly");
+        team.setPrefix("§4§lCaptain§r ");
+        team.addEntry("§c§lCalypso");
 
-        LobbyListener.updateHeaderFooter(player, (CraftPlayer) e.getPlayer().getPlayer());
+        player.getInventory().setItem(8, DuelsAPI.getLobbyItem().getItemStack());
+        player.getInventory().setItem(7, DuelsAPI.getPrefsItem().getItemStack());
+        player.getInventory().setItem(4, DuelsAPI.getCosmeticsItem().getItemStack());
+
+        LobbyListener.updateHeaderFooter(player, e.getPlayer().getCraft());
 
     }
 
@@ -115,8 +121,8 @@ public class JoinListener implements Listener {
         }
         if (!e.getPlayer().isVanished()) {
             ServerMessage message = ((ServerMessage)e.getPlayer().getActiveCosmetics().getOrDefault(Cosmetic.CosmeticType.SERVER_MESSAGE, AuroraMCAPI.getCosmetics().get(400)));
-            for (AuroraMCPlayer player1 : AuroraMCAPI.getPlayers()) {
-                player1.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Leave", message.onLeave(player1, e.getPlayer())));
+            for (AuroraMCServerPlayer player1 : ServerAPI.getPlayers()) {
+                player1.sendMessage(TextFormatter.pluginMessage("Leave", TextFormatter.convert(message.onLeave(player1, e.getPlayer()))));
             }
         }
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
@@ -129,6 +135,8 @@ public class JoinListener implements Listener {
                     player.getStats().incrementStatistic(4, "gamesPlayed", 1, true);
                 }
             }
+        } else if (player.isInGame() && player.isSpectator()) {
+            player.getGame().onLeave(player);
         }
     }
 

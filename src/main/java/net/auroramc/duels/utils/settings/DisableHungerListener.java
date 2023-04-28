@@ -4,13 +4,11 @@
 
 package net.auroramc.duels.utils.settings;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.core.api.events.entity.FoodLevelChangeEvent;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +23,10 @@ public class DisableHungerListener implements Listener {
 
     @EventHandler
     public void onMove(FoodLevelChangeEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer((Player) e.getEntity());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
-            if (e.getFoodLevel() < 30) {
-                e.setFoodLevel(30);
+            if (e.getLevel() < 30) {
+                e.setLevel(30);
             }
         }
     }

@@ -1,6 +1,8 @@
 package net.auroramc.duels.api.backend;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.api.AuroraMCAPI;
+import net.auroramc.api.backend.info.ServerInfo;
+import net.auroramc.core.api.ServerAPI;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.DuelsAPI;
 import org.apache.commons.io.FileUtils;
@@ -61,8 +63,8 @@ public class DuelsDatabaseManager {
 
     public static void updateServerData() {
         try (Jedis connection = AuroraMCAPI.getDbManager().getRedisConnection()) {
-            connection.set("serverdata." + AuroraMCAPI.getServerInfo().getNetwork().name() + "." + AuroraMCAPI.getServerInfo().getName(), ((DuelsAPI.isAwaitingRestart())?"INACTIVE":"ACTIVE") + ";" + AuroraMCAPI.getPlayers().stream().filter(player -> !player.isVanished() && (player instanceof AuroraMCDuelsPlayer && !player.isVanished())).count() + "/" + AuroraMCAPI.getServerInfo().getServerType().getInt("max_players") + ";Duels;N/A");
-            connection.expire("serverdata." + AuroraMCAPI.getServerInfo().getNetwork().name() + "." + AuroraMCAPI.getServerInfo().getName(), 15);
+            connection.set("serverdata." + AuroraMCAPI.getInfo().getNetwork().name() + "." + AuroraMCAPI.getInfo().getName(), ((DuelsAPI.isAwaitingRestart())?"INACTIVE":"ACTIVE") + ";" + ServerAPI.getPlayers().stream().filter(player -> !player.isVanished() && (player instanceof AuroraMCDuelsPlayer && !player.isVanished())).count() + "/" + ((ServerInfo)AuroraMCAPI.getInfo()).getServerType().getInt("max_players") + ";Duels;N/A");
+            connection.expire("serverdata." + AuroraMCAPI.getInfo().getNetwork().name() + "." + AuroraMCAPI.getInfo().getName(), 15);
         }
     }
 

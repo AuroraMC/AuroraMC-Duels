@@ -1,9 +1,9 @@
 package net.auroramc.duels.commands.admin;
 
-import net.auroramc.core.api.AuroraMCAPI;
-import net.auroramc.core.api.command.Command;
-import net.auroramc.core.api.permissions.Permission;
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerCommand;
+import net.auroramc.api.permissions.Permission;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
 import net.minecraft.server.v1_8_R3.EntityInsentient;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.apache.commons.lang.WordUtils;
@@ -19,25 +19,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class CommandMob extends Command {
+public class CommandMob extends ServerCommand {
 
     public CommandMob() {
         super("mob", Arrays.asList("mobs", "summon", "spawn"), Collections.singletonList(Permission.ADMIN), false, null);
     }
 
     @Override
-    public void execute(AuroraMCPlayer player, String aliasUsed, List<String> args) {
+    public void execute(AuroraMCServerPlayer player, String aliasUsed, List<String> args) {
         if (args.size() >= 1) {
             if (args.get(0).equalsIgnoreCase("kill")) {
                 if (args.size() == 2) {
                     if (args.get(1).equalsIgnoreCase("all")) {
-                        for (Entity entity : player.getPlayer().getLocation().getWorld().getEntities()) {
+                        for (Entity entity : player.getLocation().getWorld().getEntities()) {
                             if (entity instanceof Player) {
                                 continue;
                             }
                             entity.remove();
                         }
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "You killed all entities."));
+                        player.sendMessage(TextFormatter.pluginMessage("Mob", "You killed all entities."));
                         return;
                     }
                     List<String> matches = new ArrayList<>();
@@ -52,21 +52,21 @@ public class CommandMob extends Command {
                     }
 
                     if (matches.size() == 0) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "No matches were found for mob **" + mobString + "**."));
+                        player.sendMessage(TextFormatter.pluginMessage("Mob", "No matches were found for mob **" + mobString + "**."));
                         return;
                     }
 
                     if (matches.size() > 1) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "Multiple possible matches found for mob **" + mobString + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
+                        player.sendMessage(TextFormatter.pluginMessage("Mob", "Multiple possible matches found for mob **" + mobString + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
                         return;
                     }
 
                     EntityType type = EntityType.valueOf(matches.get(0));
                     if (type == EntityType.PLAYER) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "You cannot kill players with /mob."));
+                        player.sendMessage(TextFormatter.pluginMessage("Mob", "You cannot kill players with /mob."));
                         return;
                     }
-                    Collection<Entity> entities = player.getPlayer().getWorld().getEntitiesByClasses(type.getEntityClass());
+                    Collection<Entity> entities = player.getWorld().getEntitiesByClasses(type.getEntityClass());
                     for (Entity entity : entities) {
                         if (entity.getPassenger() != null) {
                             if (entity.getPassenger().getPassenger() != null) {
@@ -76,13 +76,13 @@ public class CommandMob extends Command {
                         }
                         entity.remove();
                     }
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "You have killed **" + entities.size() + " " + WordUtils.capitalizeFully(type.name().replace("_", " ")) + "s**."));
+                    player.sendMessage(TextFormatter.pluginMessage("Mob", "You have killed **" + entities.size() + " " + WordUtils.capitalizeFully(type.name().replace("_", " ")) + "s**."));
                 } else {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "Invalid syntax. Correct syntax: **/mob kill [mob]**"));
+                    player.sendMessage(TextFormatter.pluginMessage("Mob", "Invalid syntax. Correct syntax: **/mob kill [mob]**"));
                 }
             } else if (args.get(0).equalsIgnoreCase("list")) {
                 Map<String, Integer> mobs = new HashMap<>();
-                for (Entity entity : player.getPlayer().getLocation().getWorld().getEntities()) {
+                for (Entity entity : player.getLocation().getWorld().getEntities()) {
                     String name = entity.getClass().getSimpleName().replace("Craft", "");
                     if (mobs.containsKey(name)) {
                         mobs.put(name, mobs.get(name) + 1);
@@ -98,7 +98,7 @@ public class CommandMob extends Command {
                     build.append(entry.getValue());
                     build.append("**");
                 }
-                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "All mobs in world **" + player.getPlayer().getLocation().getWorld().getName() + "**:" +
+                player.sendMessage(TextFormatter.pluginMessage("Mob", "All mobs in world **" + player.getLocation().getWorld().getName() + "**:" +
                         build));
             } else {
                 List<String> matches = new ArrayList<>();
@@ -113,19 +113,19 @@ public class CommandMob extends Command {
                 }
 
                 if (matches.size() == 0) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "No matches were found for mob **" + mobString + "**."));
+                    player.sendMessage(TextFormatter.pluginMessage("Mob", "No matches were found for mob **" + mobString + "**."));
                     return;
                 }
 
                 if (matches.size() > 1) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "Multiple possible matches found for mob **" + mobString + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
+                    player.sendMessage(TextFormatter.pluginMessage("Mob", "Multiple possible matches found for mob **" + mobString + "**. Please be more specific. Matches: [**" + String.join("**, **", matches) + "**]"));
                     return;
                 }
 
                 EntityType type = EntityType.valueOf(matches.get(0));
-                Block block = player.getPlayer().getTargetBlock((Set<Material>) null, 50);
+                Block block = player.getTargetBlock((Set<Material>) null, 50);
                 if (block == null) {
-                    player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "You are not looking in a valid location. Please try again."));
+                    player.sendMessage(TextFormatter.pluginMessage("Mob", "You are not looking in a valid location. Please try again."));
                     return;
                 }
                 Location location = block.getLocation();
@@ -137,7 +137,7 @@ public class CommandMob extends Command {
                     try {
                         amount = Byte.parseByte(args.remove(0));
                     } catch (NumberFormatException e) {
-                        player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "You specified an invalid amount. Please try again."));
+                        player.sendMessage(TextFormatter.pluginMessage("Mob", "You specified an invalid amount. Please try again."));
                         return;
                     }
                 }
@@ -176,7 +176,7 @@ public class CommandMob extends Command {
                     }
                 }
 
-                player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "You have spawned **" + amount + " " + WordUtils.capitalizeFully(type.name().replace("_", " ")) + "s**. Options:\n" +
+                player.sendMessage(TextFormatter.pluginMessage("Mob", "You have spawned **" + amount + " " + WordUtils.capitalizeFully(type.name().replace("_", " ")) + "s**. Options:\n" +
                         "Baby: **" + baby + "**\n" +
                         "Angry: **" + angry + "**\n" +
                         "NoAI: **" + noAI + "**\n" +
@@ -194,7 +194,7 @@ public class CommandMob extends Command {
                     if (name != null) {
                         ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
                         stand.setVisible(false);
-                        stand.setCustomName(AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight(name.replace("_", " "))));
+                        stand.setCustomName(TextFormatter.convert(TextFormatter.highlightRaw(name.replace("_", " "))));
                         stand.setCustomNameVisible(true);
                         stand.setSmall(true);
                         stand.setMarker(true);
@@ -211,7 +211,7 @@ public class CommandMob extends Command {
                         craftEntity.getHandle().f(tag);
                         rabbit.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 1, true, false));
                         entity.setPassenger(rabbit);
-                        //entity.setCustomName(AuroraMCAPI.getFormatter().convert(AuroraMCAPI.getFormatter().highlight(name.replace("_", " "))));
+                        //entity.setCustomName(TextFormatter.convert(TextFormatter.highlight(name.replace("_", " "))));
                     }
                     if (entity instanceof EntityInsentient) {
                         if (item != null) {
@@ -286,12 +286,12 @@ public class CommandMob extends Command {
 
             }
         } else {
-            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Mob", "Invalid syntax. Correct syntax: **/mob [mob] [amount] n[name] i[held item] a[armor type] h[total health] [baby] [angry] [noai]** / **/mob kill [mob]** / **/mob list**"));
+            player.sendMessage(TextFormatter.pluginMessage("Mob", "Invalid syntax. Correct syntax: **/mob [mob] [amount] n[name] i[held item] a[armor type] h[total health] [baby] [angry] [noai]** / **/mob kill [mob]** / **/mob list**"));
         }
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(AuroraMCPlayer auroraMCPlayer, String s, List<String> list, String s1, int i) {
+    public @NotNull List<String> onTabComplete(AuroraMCServerPlayer auroraMCPlayer, String s, List<String> list, String s1, int i) {
         return new ArrayList<>();
     }
 }

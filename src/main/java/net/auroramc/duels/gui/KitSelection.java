@@ -1,6 +1,7 @@
 package net.auroramc.duels.gui;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.api.utils.TextFormatter;
+import net.auroramc.core.api.ServerAPI;
 import net.auroramc.core.api.utils.gui.GUI;
 import net.auroramc.core.api.utils.gui.GUIItem;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
@@ -30,7 +31,7 @@ public class KitSelection extends GUI {
         int row = 1;
 
         for (Kit kit : DuelsAPI.getRegisteredKits()) {
-            this.setItem(row, column, new GUIItem(kit.getMaterial(), "&3&l" + kit.getName(), 1, ";&7" + WordUtils.wrap(kit.getDescription(), 40, ";&7", false) + ";;&aClick to send invite!"));
+            this.setItem(row, column, new GUIItem(kit.getMaterial(), "&3&l" + kit.getName(), 1, ";&7" + WordUtils.wrap(kit.getDescription(), 40, ";&7", false) + ";;&aClick to send invite!", kit.getData()));
             column++;
             if (column == 8) {
                 row++;
@@ -45,22 +46,22 @@ public class KitSelection extends GUI {
     @Override
     public void onClick(int row, int column, ItemStack item, ClickType clickType) {
         if (item.getType() == Material.STAINED_GLASS_PANE) {
-            player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ITEM_BREAK, 100, 0);
+            player.playSound(player.getLocation(), Sound.ITEM_BREAK, 100, 0);
             return;
         }
 
         Kit kit = DuelsAPI.getRegisteredKits().get(((row - 1) * 7) + (column - 1));
-        if (invitee.getPlayer().isOnline()) {
-            player.getPlayer().closeInventory();
+        if (invitee.isOnline()) {
+            player.closeInventory();
             new BukkitRunnable(){
                 @Override
                 public void run() {
                     new DuelInvite(player, invitee, kit);
                 }
-            }.runTaskAsynchronously(AuroraMCAPI.getCore());
+            }.runTaskAsynchronously(ServerAPI.getCore());
         } else {
-            player.getPlayer().closeInventory();
-            player.getPlayer().sendMessage(AuroraMCAPI.getFormatter().pluginMessage("Duels", "The player you invited has since gone offline so your invite was cancelled!"));
+            player.closeInventory();
+            player.sendMessage(TextFormatter.pluginMessage("Duels", "The player you invited has since gone offline so your invite was cancelled!"));
         }
     }
 

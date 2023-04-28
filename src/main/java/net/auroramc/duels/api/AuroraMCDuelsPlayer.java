@@ -1,6 +1,6 @@
 package net.auroramc.duels.api;
 
-import net.auroramc.core.api.players.AuroraMCPlayer;
+import net.auroramc.core.api.player.AuroraMCServerPlayer;
 import net.auroramc.duels.api.game.DuelInvite;
 import net.auroramc.duels.api.game.Game;
 import net.auroramc.duels.api.game.GameRewards;
@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
+public class AuroraMCDuelsPlayer extends AuroraMCServerPlayer {
 
     private Game game;
     private AuroraMCDuelsPlayer lastHitBy;
     private long lastHitAt;
+    private long lastClick;
+    private boolean spectator;
 
     private final Map<AuroraMCDuelsPlayer, Long> latestHits;
     private GameRewards rewards;
@@ -21,12 +23,20 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
     private final Map<UUID, DuelInvite> pendingIncomingInvites;
     private DuelInvite pendingOutgoingInvite;
 
-    public AuroraMCDuelsPlayer(AuroraMCPlayer oldPlayer) {
+    public AuroraMCDuelsPlayer(AuroraMCServerPlayer oldPlayer) {
         super(oldPlayer);
         this.game = null;
         latestHits = new HashMap<>();
         pendingIncomingInvites = new HashMap<>();
         pendingOutgoingInvite = null;
+    }
+
+    public void click() {
+        lastClick = System.currentTimeMillis();
+    }
+
+    public boolean canClick() {
+        return System.currentTimeMillis() - lastClick >= 500;
     }
 
     public Game getGame() {
@@ -35,9 +45,19 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
 
     public void setGame(Game game) {
         this.game = game;
+        this.spectator = false;
         if (game != null) {
            rewards = new GameRewards(this);
         }
+    }
+
+    public void spectateGame(Game game) {
+        this.game = game;
+        this.spectator = true;
+    }
+
+    public boolean isSpectator() {
+        return spectator;
     }
 
     public boolean isInGame() {
@@ -89,10 +109,10 @@ public class AuroraMCDuelsPlayer extends AuroraMCPlayer {
     }
 
     public void newIncoming(DuelInvite invite) {
-        pendingIncomingInvites.put(invite.getInviter().getPlayer().getUniqueId(), invite);
+        pendingIncomingInvites.put(invite.getInviter().getUniqueId(), invite);
     }
 
     public void removeIncoming(DuelInvite invite) {
-        pendingIncomingInvites.remove(invite.getInviter().getPlayer().getUniqueId());
+        pendingIncomingInvites.remove(invite.getInviter().getUniqueId());
     }
 }

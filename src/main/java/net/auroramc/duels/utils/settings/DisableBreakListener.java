@@ -4,15 +4,11 @@
 
 package net.auroramc.duels.utils.settings;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.core.api.events.block.BlockBreakEvent;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
-import net.auroramc.duels.api.DuelsAPI;
 import net.auroramc.duels.api.game.Game;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +23,7 @@ public class DisableBreakListener implements Listener {
 
     @EventHandler
     public void onMove(BlockBreakEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
             e.setCancelled(true);
         }

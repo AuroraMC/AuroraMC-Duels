@@ -51,7 +51,7 @@ public class BuildUHC extends Kit {
     }
 
     public BuildUHC() {
-        super(5, "BuildUHC", "BuildUHC", Material.GOLDEN_APPLE, (short)1, "ALL");
+        super(5, "BuildUHC", "BuildUHC", Material.GOLDEN_APPLE, (short)1, "ALL", 15);
     }
 
     @Override
@@ -71,26 +71,34 @@ public class BuildUHC extends Kit {
 
     @Override
     public void onGameStart(AuroraMCDuelsPlayer player) {
-        player.getPlayer().getInventory().setHelmet(helmet);
-        player.getPlayer().getInventory().setChestplate(chestplate);
-        player.getPlayer().getInventory().setLeggings(leggings);
-        player.getPlayer().getInventory().setBoots(boots);
-        player.getPlayer().getInventory().setItem(0, sword);
-        player.getPlayer().getInventory().setItem(1, new GUIItem(Material.FISHING_ROD, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(2, bow);
-        player.getPlayer().getInventory().setItem(3, new GUIItem(Material.LAVA_BUCKET, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(4, new GUIItem(Material.WATER_BUCKET, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(5, new GUIItem(Material.GOLDEN_APPLE, null, 6, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(6, new GUIItem(Material.SKULL_ITEM, "&3&lGolden Head", 3, null, (short)3, false, "PhantomTupac").getItem());
-        player.getPlayer().getInventory().setItem(7, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(8, new GUIItem(Material.COBBLESTONE, null, 64, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(9, new GUIItem(Material.ARROW, null, 32, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(10, new GUIItem(Material.DIAMOND_AXE, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(11, new GUIItem(Material.DIAMOND_PICKAXE, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(30, new GUIItem(Material.LAVA_BUCKET, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(31, new GUIItem(Material.WATER_BUCKET, null, 1, null, (short)0).getItem());
-        player.getPlayer().getInventory().setItem(35, new GUIItem(Material.WOOD, null, 64, null, (short)0).getItem());
+        player.getInventory().setHelmet(helmet);
+        player.getInventory().setChestplate(chestplate);
+        player.getInventory().setLeggings(leggings);
+        player.getInventory().setBoots(boots);
+        player.getInventory().setItem(0, sword);
+        player.getInventory().setItem(1, new GUIItem(Material.FISHING_ROD, null, 1, null, (short)0).getItemStack());
+        player.getInventory().setItem(2, bow);
+        player.getInventory().setItem(3, new GUIItem(Material.LAVA_BUCKET, null, 1, null, (short)0).getItemStack());
+        player.getInventory().setItem(4, new GUIItem(Material.WATER_BUCKET, null, 1, null, (short)0).getItemStack());
+        player.getInventory().setItem(5, new GUIItem(Material.GOLDEN_APPLE, null, 6, null, (short)0).getItemStack());
+        player.getInventory().setItem(6, new GUIItem(Material.SKULL_ITEM, "&3&lGolden Head", 3, null, (short)3, false, "PhantomTupac").getItemStack());
+        player.getInventory().setItem(7, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItemStack());
+        player.getInventory().setItem(8, new GUIItem(Material.COBBLESTONE, null, 64, null, (short)0).getItemStack());
+        player.getInventory().setItem(10, new GUIItem(Material.DIAMOND_AXE, null, 1, null, (short)0).getItemStack());
+        player.getInventory().setItem(11, new GUIItem(Material.DIAMOND_PICKAXE, null, 1, null, (short)0).getItemStack());
+        player.getInventory().setItem(30, new GUIItem(Material.LAVA_BUCKET, null, 1, null, (short)0).getItemStack());
+        player.getInventory().setItem(31, new GUIItem(Material.WATER_BUCKET, null, 1, null, (short)0).getItemStack());
+        player.getInventory().setItem(35, new GUIItem(Material.WOOD, null, 64, null, (short)0).getItemStack());
 
+    }
+
+    @Override
+    public void onGameRelease(AuroraMCDuelsPlayer player) {
+        if (player.getInventory().getItem(9) == null || player.getInventory().getItem(9).getType() == Material.AIR) {
+            player.getInventory().setItem(9, new GUIItem(Material.ARROW, null, 32, null, (short)0).getItemStack());
+        } else {
+            player.getInventory().addItem(new GUIItem(Material.ARROW, null, 32, null, (short)0).getItemStack());
+        }
     }
 }
 

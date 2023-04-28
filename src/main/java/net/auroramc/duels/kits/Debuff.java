@@ -58,12 +58,12 @@ public class Debuff extends Kit {
         damage = new Potion(PotionType.INSTANT_DAMAGE, 2).splash().toItemStack(1);
         poison = new Potion(PotionType.POISON, 2).splash().toItemStack(1);
         weakness = new Potion(PotionType.WEAKNESS, 2).splash().toItemStack(1);
-
     }
 
     public Debuff() {
-        super(3, "Debuff", "The opposite of NoDebuff", Material.POTION, (short)16420, "ALL");
+        super(6, "Debuff", "The opposite of NoDebuff", Material.POTION, (short)16420, "ALL", 15);
     }
+
     @Override
     public void onGameCreate(Game game) {
         StandardDeathListener.register(game);
@@ -83,23 +83,27 @@ public class Debuff extends Kit {
     }
 
     @Override
+    public void onGameRelease(AuroraMCDuelsPlayer player) {
+    }
+
+    @Override
     public void onGameStart(AuroraMCDuelsPlayer player) {
-        player.getPlayer().getInventory().setHelmet(helmet);
-        player.getPlayer().getInventory().setChestplate(chestplate);
-        player.getPlayer().getInventory().setLeggings(leggings);
-        player.getPlayer().getInventory().setBoots(boots);
-        player.getPlayer().getInventory().setItem(0, sword);
-        player.getPlayer().getInventory().setItem(1, speed);
-        player.getPlayer().getInventory().setItem(2, speed);
-        player.getPlayer().getInventory().setItem(3, damage);
-        player.getPlayer().getInventory().setItem(4, poison);
-        player.getPlayer().getInventory().setItem(5, poison);
-        player.getPlayer().getInventory().setItem(6, weakness);
-        player.getPlayer().getInventory().setItem(7, weakness);
-        player.getPlayer().getInventory().setItem(8, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItem());
+        player.getInventory().setHelmet(helmet);
+        player.getInventory().setChestplate(chestplate);
+        player.getInventory().setLeggings(leggings);
+        player.getInventory().setBoots(boots);
+        player.getInventory().setItem(0, sword);
+        player.getInventory().setItem(1, speed);
+        player.getInventory().setItem(2, speed);
+        player.getInventory().setItem(3, damage);
+        player.getInventory().setItem(4, poison);
+        player.getInventory().setItem(5, poison);
+        player.getInventory().setItem(6, weakness);
+        player.getInventory().setItem(7, weakness);
+        player.getInventory().setItem(8, new GUIItem(Material.COOKED_BEEF, null, 64, null, (short)0).getItemStack());
 
         for (int i = 9;i < 36;i++) {
-            player.getPlayer().getInventory().setItem(i, health);
+            player.getInventory().setItem(i, health);
         }
     }
 }

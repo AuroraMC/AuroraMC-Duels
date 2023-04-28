@@ -4,12 +4,11 @@
 
 package net.auroramc.duels.utils.settings;
 
-import net.auroramc.core.api.AuroraMCAPI;
+import net.auroramc.core.api.events.block.BlockPlaceEvent;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class DisablePlaceListener implements Listener {
 
     @EventHandler
     public void onMove(BlockPlaceEvent e) {
-        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) AuroraMCAPI.getPlayer(e.getPlayer());
+        AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
             e.setCancelled(true);
         }
