@@ -157,7 +157,6 @@ public class AuroraMCDuels extends JavaPlugin {
         AuroraMCAPI.registerCommand(new CommandEffect());
         AuroraMCAPI.registerCommand(new CommandGive());
         AuroraMCAPI.registerCommand(new CommandMob());
-        AuroraMCAPI.registerCommand(new CommandSpectate());
 
 
         DuelsAPI.registerKit(new Gapple());
