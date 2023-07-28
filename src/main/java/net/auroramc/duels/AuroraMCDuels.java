@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 public class AuroraMCDuels extends JavaPlugin {
 
@@ -66,7 +67,7 @@ public class AuroraMCDuels extends JavaPlugin {
             try {
                 FileUtils.deleteDirectory(zipFolder);
             } catch (IOException e) {
-                e.printStackTrace();
+                AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
             }
         }
         DuelsDatabaseManager.downloadMaps();
@@ -79,7 +80,7 @@ public class AuroraMCDuels extends JavaPlugin {
             try {
                 FileUtils.deleteDirectory(mapsFolder);
             } catch (IOException e) {
-                e.printStackTrace();
+                AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
             }
         }
         mapsFolder.mkdirs();
@@ -87,7 +88,7 @@ public class AuroraMCDuels extends JavaPlugin {
             try {
                 ZipUtil.unzip(zip.toPath().toAbsolutePath().toString(), mapsFolder.toPath().toAbsolutePath() + "/" + zip.getName().split("\\.")[0]);
             } catch (IOException e) {
-                e.printStackTrace();
+                AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
             }
         }
         File[] maps = new File(getDataFolder(), "maps").listFiles();
@@ -104,7 +105,7 @@ public class AuroraMCDuels extends JavaPlugin {
                 object = parser.parse(fileReader);
                 jsonObject = new JSONObject(((org.json.simple.JSONObject)  object).toJSONString());
             } catch (IOException | ParseException e) {
-                e.printStackTrace();
+                AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
                 getLogger().info("Map loading for a map failed, skipping...");
                 continue;
             }
@@ -135,7 +136,7 @@ public class AuroraMCDuels extends JavaPlugin {
                 file.mkdirs();
                 FileUtils.copyDirectory(map.getRegionFolder(), file);
             } catch (IOException e) {
-                e.printStackTrace();
+                AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
             }
         }
 

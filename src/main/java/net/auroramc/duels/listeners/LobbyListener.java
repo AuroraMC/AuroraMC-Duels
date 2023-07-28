@@ -45,6 +45,7 @@ import org.bukkit.util.Vector;
 import org.json.JSONArray;
 
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 public class LobbyListener implements Listener {
 
@@ -162,7 +163,7 @@ public class LobbyListener implements Listener {
 
             player2.getHandle().playerConnection.sendPacket(packet);
         } catch (NoSuchFieldException | IllegalAccessException ex) {
-            ex.printStackTrace();
+            AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", ex);
         }
     }
 

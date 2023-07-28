@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class Game {
 
@@ -84,7 +85,7 @@ public class Game {
             file.mkdirs();
             FileUtils.copyDirectory(map.getRegionFolder(), file);
         } catch (IOException e) {
-            e.printStackTrace();
+            AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
         }
         new BukkitRunnable(){
             @Override
