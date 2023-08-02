@@ -32,7 +32,7 @@ public class DuelsDatabaseManager {
 
     public static List<Integer> downloadMaps() {
         try (Connection connection = AuroraMCAPI.getDbManager().getMySQLConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM maps WHERE parse_version = " + ((AuroraMCAPI.isTestServer())?"'TEST'":"'LIVE'") + "AND game = 'DUELS'");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM maps WHERE parse_version = " + ((AuroraMCAPI.isTestServer())?"'TEST'":"'LIVE'") + "AND (game = 'DUELS' OR game = 'LOBBY')");
             ResultSet set = statement.executeQuery();
             File file = new File(DuelsAPI.getDuels().getDataFolder(), "zips");
             file.mkdirs();
