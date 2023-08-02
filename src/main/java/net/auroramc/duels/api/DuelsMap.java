@@ -15,13 +15,15 @@ public class DuelsMap {
     private final int id;
     private final String name;
     private final String author;
+    private final String game;
     private final JSONObject mapData;
 
-    public DuelsMap(File regionFolder, int id, String name, String author, JSONObject mapData) {
+    public DuelsMap(File regionFolder, int id, String name, String author, String game, JSONObject mapData) {
         this.regionFolder = regionFolder;
         this.id = id;
         this.name = name;
         this.author = author;
+        this.game = game;
         this.mapData = mapData;
     }
 
@@ -44,4 +46,9 @@ public class DuelsMap {
     public JSONObject getMapData() {
         return mapData;
     }
+
+    public String getGame() {
+        return game;
+    }
 }
+

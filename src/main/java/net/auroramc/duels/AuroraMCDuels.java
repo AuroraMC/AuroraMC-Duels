@@ -32,23 +32,27 @@ import net.auroramc.duels.utils.settings.*;
 import net.md_5.bungee.api.chat.*;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class AuroraMCDuels extends JavaPlugin {
 
     private static final List<String> tips;
+
+    private static FileConfiguration maps;
+    private static File mapsFile;
 
     static {
         tips = new ArrayList<>();
@@ -60,21 +64,25 @@ public class AuroraMCDuels extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        mapsFile = new File(getDataFolder(), "maps.yml");
+        if (!mapsFile.exists()) {
+            mapsFile.getParentFile().mkdirs();
+            copy(getResource("maps.yml"), mapsFile);
+        }
+
+        maps = new YamlConfiguration();
+        try {
+            maps.load(mapsFile);
+        } catch (Exception e) {
+            AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
+        }
+        maps.options().copyHeader(true);
         DuelsAPI.init(this);
         getLogger().info("Downloading all live maps...");
-        File zipFolder = new File(getDataFolder(), "zips");
-        if (zipFolder.exists()) {
-            try {
-                FileUtils.deleteDirectory(zipFolder);
-            } catch (IOException e) {
-                AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
-            }
-        }
-        DuelsDatabaseManager.downloadMaps();
-        File[] zips = new File(getDataFolder(), "zips").listFiles();
-        assert zips != null;
+        List<Integer> ints = DuelsDatabaseManager.downloadMaps();
+        File zips = new File(getDataFolder(), "zips");
 
-        getLogger().info(zips.length + " zips downloaded. Extracting maps...");
+        getLogger().info(ints.size() + " zips downloaded. Extracting maps...");
         File mapsFolder = new File(getDataFolder(), "maps");
         if (mapsFolder.exists()) {
             try {
@@ -84,17 +92,36 @@ public class AuroraMCDuels extends JavaPlugin {
             }
         }
         mapsFolder.mkdirs();
-        for (File zip : zips) {
+        for (int zip : ints) {
+            File file = new File(zips, zip + ".zip");
             try {
-                ZipUtil.unzip(zip.toPath().toAbsolutePath().toString(), mapsFolder.toPath().toAbsolutePath() + "/" + zip.getName().split("\\.")[0]);
+                ZipUtil.unzip(file.toPath().toAbsolutePath().toString(), mapsFolder.toPath().toAbsolutePath() + "/" + zip);
             } catch (IOException e) {
                 AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
             }
         }
-        File[] maps = new File(getDataFolder(), "maps").listFiles();
+        File[] maps = mapsFolder.listFiles();
         assert maps != null;
 
-        getLogger().info(maps.length + " maps extracted. Loading map registry...");
+        getLogger().info(ints.size() + " maps extracted. Removing old maps...");
+
+        int i = 0;
+        for (File map : maps) {
+            String mapId = map.getName();
+            if (AuroraMCDuels.maps.contains(mapId + ".load-code")) {
+                if (!UUID.fromString(AuroraMCDuels.maps.getString(mapId + ".load-code")).equals(DuelsAPI.getReloadCode())) {
+                    map.delete();
+                    i++;
+                }
+            } else {
+                map.delete();
+                i++;
+            }
+        }
+
+        maps = mapsFolder.listFiles();
+
+        getLogger().info(i + " maps removed. Loading map registry...");
         for (File map : maps) {
             File data = new File(map, "map.json");
             JSONParser parser = new JSONParser();
@@ -114,11 +141,12 @@ public class AuroraMCDuels extends JavaPlugin {
             int id = Integer.parseInt(map.getName().split("\\.")[0]);
             String name = jsonObject.getString("name");
             String author = jsonObject.getString("author");
+            String game = jsonObject.getString("game_type");
             if (DuelsAPI.getMaps().containsKey(gameType)) {
-                DuelsAPI.getMaps().get(gameType).getMaps().add(new DuelsMap(map, id, name, author, jsonObject));
+                DuelsAPI.getMaps().get(gameType).getMaps().add(new DuelsMap(map, id, name, author, game, jsonObject));
             } else {
                 MapRegistry registry = new MapRegistry(gameType);
-                registry.getMaps().add(new DuelsMap(map, id, name, author, jsonObject));
+                registry.getMaps().add(new DuelsMap(map, id, name, author, game, jsonObject));
                 DuelsAPI.getMaps().put(gameType, registry);
             }
         }
@@ -196,6 +224,29 @@ public class AuroraMCDuels extends JavaPlugin {
                 }
             }
         }.runTaskTimerAsynchronously(DuelsAPI.getDuels(), 36000, 36000);
+    }
+
+    private void copy(InputStream in, File file) {
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
+        }
+    }
+
+    public static FileConfiguration getMaps() {
+        return maps;
+    }
+
+    public static File getMapsFile() {
+        return mapsFile;
     }
 
     @Override
