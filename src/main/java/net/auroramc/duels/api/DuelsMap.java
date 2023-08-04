@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2023 AuroraMC Ltd. All Rights Reserved.
+ *
+ * PRIVATE AND CONFIDENTIAL - Distribution and usage outside the scope of your job description is explicitly forbidden except in circumstances where a company director has expressly given written permission to do so.
+ */
+
 package net.auroramc.duels.api;
 
 import org.json.JSONObject;
@@ -9,13 +15,15 @@ public class DuelsMap {
     private final int id;
     private final String name;
     private final String author;
+    private final String game;
     private final JSONObject mapData;
 
-    public DuelsMap(File regionFolder, int id, String name, String author, JSONObject mapData) {
+    public DuelsMap(File regionFolder, int id, String name, String author, String game, JSONObject mapData) {
         this.regionFolder = regionFolder;
         this.id = id;
         this.name = name;
         this.author = author;
+        this.game = game;
         this.mapData = mapData;
     }
 
@@ -38,4 +46,9 @@ public class DuelsMap {
     public JSONObject getMapData() {
         return mapData;
     }
+
+    public String getGame() {
+        return game;
+    }
 }
+

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2023 AuroraMC Ltd. All Rights Reserved.
+ *
+ * PRIVATE AND CONFIDENTIAL - Distribution and usage outside the scope of your job description is explicitly forbidden except in circumstances where a company director has expressly given written permission to do so.
+ */
+
 package net.auroramc.duels.api.game;
 
 import com.google.common.io.ByteArrayDataOutput;
@@ -35,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class Game {
 
@@ -78,7 +85,7 @@ public class Game {
             file.mkdirs();
             FileUtils.copyDirectory(map.getRegionFolder(), file);
         } catch (IOException e) {
-            e.printStackTrace();
+            AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", e);
         }
         new BukkitRunnable(){
             @Override

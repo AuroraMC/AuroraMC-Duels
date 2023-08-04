@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2023 AuroraMC Ltd. All Rights Reserved.
+ *
+ * PRIVATE AND CONFIDENTIAL - Distribution and usage outside the scope of your job description is explicitly forbidden except in circumstances where a company director has expressly given written permission to do so.
+ */
+
 package net.auroramc.duels.listeners;
 
 import com.google.common.io.ByteArrayDataOutput;
@@ -39,6 +45,7 @@ import org.bukkit.util.Vector;
 import org.json.JSONArray;
 
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 public class LobbyListener implements Listener {
 
@@ -156,7 +163,7 @@ public class LobbyListener implements Listener {
 
             player2.getHandle().playerConnection.sendPacket(packet);
         } catch (NoSuchFieldException | IllegalAccessException ex) {
-            ex.printStackTrace();
+            AuroraMCAPI.getLogger().log(Level.WARNING, "An exception has occurred. Stack trace: ", ex);
         }
     }
 

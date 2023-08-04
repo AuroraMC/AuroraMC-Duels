@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2023 AuroraMC Ltd. All Rights Reserved.
+ *
+ * PRIVATE AND CONFIDENTIAL - Distribution and usage outside the scope of your job description is explicitly forbidden except in circumstances where a company director has expressly given written permission to do so.
+ */
+
 package net.auroramc.duels.api;
 
 import com.mojang.authlib.GameProfile;
@@ -20,6 +26,8 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import java.util.*;
 
 public class DuelsAPI {
+
+    private static UUID reloadCode;
 
     private static final String CALYPSO_SKIN = "ewogICJ0aW1lc3RhbXAiIDogMTY3MjYwMjQ0NTAzOCwKICAicHJvZmlsZUlkIiA6ICI0ZDE2OTg3NzUyOWY0ODc3YWQxOWE1MDA2ZjM5NDBiMCIsCiAgInByb2ZpbGVOYW1lIiA6ICJBdXJvcmFNQyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS84NDYyMDkzMWViMDg5ZWRkY2UyNzkzNmNlMTIyYTQ2ODM3ZTFmYmU2NjA4YTYzMmQ5Njk2NGI3NzQyMGUzYWIiCiAgICB9CiAgfQp9";
     private static final String CALYPSO_SIGNATURE = "k0+/l28ge5BpqrSURb9BZ/WGTie+hIqezCptb2cUXdU9/72VS5UF3Y1q1q2E0xqhMah++SvScyXIfjmneg9j5Dzivbc2ksTJ6llmNLgi+E/0WjpXH4mjuXSH1n3C9sMsKByJZ0z+c/tZeGdLWFdCEEwVLKQCBGNyVskTp4wDNVS3iLOuMVbX0hDkXkRxCACVXmflG5qCKHN5pzjgfToJKBZGrv9bkK9ypzjocHBEb0jZYBaGnddENb4msaOA2iSVSaxD0IYjTggjo079p9SyrWZISW070+gImHXCJHi4BO6S6mzUQik5ySp3wY14Dc4jP+FZDB83LwGSF20Eyl+ib3pP3Zx5VyQdsZjxdoWhmicauV3Uxr30HHrmcKhBCFywrIQcw/tyNvlN9Zoq7KU2JVA8E2Y49fMhg3heDjr5XCyMu1Mjnn5BzVk7McbK1DFjCBH5meWiM+xAKPlNRgAY1/kkjtHME8I4gn3QQMapxsctRXMMdMCUBtDtnMuNun8NIk9mnnEpnWYvjCIiFmAT4ndHSx9X7+EHpH/bCZJlgfdTGm18rn489UpauJqPk0rr52rpeSSdqLVEcqwIXssFirIPzSaXwUynseSk4s3pB1hxnrT98KH1rt+rihBqHQI+m6K0uZQzDfz+Xy502ZQTBFdEYBLNPeQmFVXgYhfpL4Q=";
@@ -52,6 +60,9 @@ public class DuelsAPI {
         xpBoostMessage = DuelsDatabaseManager.getXpMessage();
         xpBoostMultiplier = DuelsDatabaseManager.getXpMultiplier();
         games = new ArrayList<>();
+
+        reloadCode = UUID.randomUUID();
+
     }
 
     public static void spawnEntities() {
@@ -142,5 +153,9 @@ public class DuelsAPI {
 
     public static EntityPlayer getCalypsoEntity() {
         return calypsoEntity;
+    }
+
+    public static UUID getReloadCode() {
+        return reloadCode;
     }
 }
