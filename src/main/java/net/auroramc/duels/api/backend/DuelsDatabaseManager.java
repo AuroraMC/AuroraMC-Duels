@@ -62,7 +62,7 @@ public class DuelsDatabaseManager {
                 AuroraMCDuels.getMaps().set(set.getInt(2) + ".name", set.getString(3));
                 AuroraMCDuels.getMaps().set(set.getInt(2) + ".author", set.getString(4));
                 AuroraMCDuels.getMaps().set(set.getInt(2) + ".game", set.getString(5));
-                AuroraMCDuels.getMaps().set(set.getInt(2) + ".parse-number", set.getString(6));
+                AuroraMCDuels.getMaps().set(set.getInt(2) + ".parse-number", set.getInt(6));
                 AuroraMCDuels.getMaps().set(set.getInt(2) + ".load-code", DuelsAPI.getReloadCode().toString());
                 AuroraMCDuels.getMaps().save(AuroraMCDuels.getMapsFile());
                 ints.add(set.getInt(2));
