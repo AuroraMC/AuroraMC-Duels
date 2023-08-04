@@ -43,7 +43,8 @@ public class DuelsDatabaseManager {
                     if (AuroraMCDuels.getMaps().contains(set.getInt(2) +"")) {
                         int parseVersion = AuroraMCDuels.getMaps().getInt(set.getInt(2) + ".parse-number");
                         if (parseVersion >= set.getInt(6)) {
-                            //We do not need to update the map, continue;
+                            //We do not need to update the map, update the load code then continue;
+                            AuroraMCDuels.getMaps().set(set.getInt(2) + ".load-code", DuelsAPI.getReloadCode().toString());
                             continue;
                         }
                     }
@@ -62,7 +63,7 @@ public class DuelsDatabaseManager {
                 AuroraMCDuels.getMaps().set(set.getInt(2) + ".author", set.getString(4));
                 AuroraMCDuels.getMaps().set(set.getInt(2) + ".game", set.getString(5));
                 AuroraMCDuels.getMaps().set(set.getInt(2) + ".parse-number", set.getString(6));
-                AuroraMCDuels.getMaps().set(set.getInt(2) + ".load-code", DuelsAPI.getReloadCode());
+                AuroraMCDuels.getMaps().set(set.getInt(2) + ".load-code", DuelsAPI.getReloadCode().toString());
                 AuroraMCDuels.getMaps().save(AuroraMCDuels.getMapsFile());
                 ints.add(set.getInt(2));
             }
