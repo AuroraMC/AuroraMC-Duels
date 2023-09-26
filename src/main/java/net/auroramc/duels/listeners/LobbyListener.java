@@ -118,7 +118,7 @@ public class LobbyListener implements Listener {
     public void onHunger(FoodLevelChangeEvent e) {
         if (e.getLevel() < 25) {
             AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
-            if (!player.isInGame()) {
+            if (!player.isInGame() || player.isSpectator()) {
                 e.setCancelled(true);
                 e.setLevel(30);
             }
@@ -248,6 +248,13 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onCosmeticSwitch(CosmeticSwitchEvent e) {
+        if (e.getPlayer().isVanished() || ((AuroraMCDuelsPlayer)e.getPlayer()).isInGame()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCosmeticEnable(PlayerUseCosmeticEvent e) {
         if (e.getPlayer().isVanished() || ((AuroraMCDuelsPlayer)e.getPlayer()).isInGame()) {
             e.setCancelled(true);
         }
