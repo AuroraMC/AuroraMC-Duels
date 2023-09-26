@@ -20,6 +20,7 @@ import net.auroramc.core.api.events.player.PlayerItemConsumeEvent;
 import net.auroramc.duels.AuroraMCDuels;
 import net.auroramc.duels.api.AuroraMCDuelsPlayer;
 import net.auroramc.duels.api.game.Game;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
@@ -30,6 +31,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,25 @@ public class StandardDeathListener implements Listener {
     public void onDamage(PlayerDamageEvent e) {
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
+            if (player.getGame().getGameState() != Game.GameState.IN_PROGRESS) {
+                e.setCancelled(true);
+                return;
+            }
             if (player.isSpectator()) {
+                e.setCancelled(true);
+                return;
+            }
+            if (e instanceof PlayerDamageByPlayerEvent && ((AuroraMCDuelsPlayer) ((PlayerDamageByPlayerEvent) e).getDamager()).isSpectator()) {
+                if (e.getCause() == PlayerDamageEvent.DamageCause.VOID) {
+                    Game game = ((AuroraMCDuelsPlayer) ((PlayerDamageByPlayerEvent) e).getDamager()).getGame();
+                    JSONObject specSpawn = game.getMap().getMapData().getJSONObject("spawn").getJSONArray("SPECTATOR").getJSONObject(0);
+                    int x, y, z;
+                    x = specSpawn.getInt("x");
+                    y = specSpawn.getInt("y");
+                    z = specSpawn.getInt("z");
+                    float yaw = specSpawn.getFloat("yaw");
+                    player.teleport(new Location(game.getWorld(), x, y, z, yaw, 0));
+                }
                 e.setCancelled(true);
                 return;
             }
@@ -193,6 +213,7 @@ public class StandardDeathListener implements Listener {
                 }
                 if (player.getGame().getGameState() != Game.GameState.IN_PROGRESS) {
                     e.setCancelled(true);
+                    return;
                 }
                 if (!e.isCancelled() && e instanceof PlayerDamageByPlayerEvent) {
                     AuroraMCDuelsPlayer player1 = (AuroraMCDuelsPlayer) ((PlayerDamageByPlayerEvent) e).getDamager();

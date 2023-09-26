@@ -78,8 +78,27 @@ public class NoDamageListener implements Listener {
     public void onDamage(PlayerDamageEvent e) {
         AuroraMCDuelsPlayer player = (AuroraMCDuelsPlayer) e.getPlayer();
         if (player.isInGame() && games.contains(player.getGame())) {
+            if (player.getGame().getGameState() != Game.GameState.IN_PROGRESS) {
+                e.setCancelled(true);
+                return;
+            }
             if (player.isSpectator()) {
                 e.setCancelled(true);
+                return;
+            }
+            if (e instanceof PlayerDamageByPlayerEvent && ((AuroraMCDuelsPlayer) ((PlayerDamageByPlayerEvent) e).getDamager()).isSpectator()) {
+                if (e.getCause() == PlayerDamageEvent.DamageCause.VOID) {
+                    Game game = ((AuroraMCDuelsPlayer) ((PlayerDamageByPlayerEvent) e).getDamager()).getGame();
+                    JSONObject specSpawn = game.getMap().getMapData().getJSONObject("spawn").getJSONArray("SPECTATOR").getJSONObject(0);
+                    int x, y, z;
+                    x = specSpawn.getInt("x");
+                    y = specSpawn.getInt("y");
+                    z = specSpawn.getInt("z");
+                    float yaw = specSpawn.getFloat("yaw");
+                    player.teleport(new Location(game.getWorld(), x, y, z, yaw, 0));
+                }
+                e.setCancelled(true);
+                return;
             }
             e.setDamage(0);
             if (e instanceof PlayerDamageByPlayerEvent) {
